@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>초기 계정 일괄 생성 툴</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-50 p-8">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+        <h1 class="text-2xl font-bold text-slate-800 mb-4">초기 테스트 계정 일괄 생성기</h1>
+        
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-sm text-yellow-800">
+            <strong>주의사항:</strong> 이 스크립트를 실행하기 전에 반드시 Supabase 대시보드에서 다음 설정을 변경해주세요.<br>
+            <span class="font-bold">Authentication > Providers > Email</span> 메뉴에서<br>
+            <span class="font-bold text-red-600">"Confirm email" (이메일 인증) 옵션을 반드시 꺼야(Toggle OFF)</span> 즉시 로그인 가능한 계정이 생성됩니다.
+        </div>
+
+        <div class="space-y-4 mb-6">
+            <div>
+                <label class="block text-sm font-bold mb-1">Supabase URL</label>
+                <input type="text" id="supabase-url" class="w-full border p-2 rounded" placeholder="https://xxxx.supabase.co">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Supabase Anon Key</label>
+                <input type="password" id="supabase-key" class="w-full border p-2 rounded" placeholder="eyJhbG...">
+            </div>
+        </div>
+
+        <button id="btn-create" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow hover:bg-blue-700 transition">
+            관리자 및 4개 협력사 계정 일괄 생성하기
+        </button>
+
+        <div id="log" class="mt-6 p-4 bg-slate-900 text-green-400 font-mono text-sm rounded-xl h-64 overflow-y-auto hidden">
+            <!-- 로그 출력 영역 -->
+        </div>
+    </div>
+
+    <script>
+        const ACCOUNTS = [
+            { email: 'admin@kepco.co.kr', password: 'kepco1234!', company: '한국전력공사 대덕유성지사', name: '안전담당자', role: 'admin' },
+            { email: 'partner1@kepco.com', password: 'partner1234!', company: '(주)알파전력', name: '현장소장A', role: 'user' },
+            { email: 'partner2@kepco.com', password: 'partner1234!', company: '(주)베타건설', name: '현장소장B', role: 'user' },
+            { email: 'partner3@kepco.com', password: 'partner1234!', company: '(주)감마이엔지', name: '현장소장C', role: 'user' },
+            { email: 'partner4@kepco.com', password: 'partner1234!', company: '(주)델타테크', name: '현장소장D', role: 'user' }
+        ];
+
+        function logMsg(msg, isError = false) {
+            const logEl = document.getElementById('log');
+            logEl.classList.remove('hidden');
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            if (isError) p.classList.add('text-red-400');
+            logEl.appendChild(p);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        document.getElementById('btn-create').addEventListener('click', async () => {
+            const url = document.getElementById('supabase-url').value.trim();
+            const key = document.getElementById('supabase-key').value.trim();
+
+            if (!url || !key) {
+                alert('Supabase URL과 Key를 입력해주세요.');
+                return;
+            }
+
+            const supabase = window.supabase.createClient(url, key);
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('btn-create').disabled = true;
+
+            for (const acc of ACCOUNTS) {
+                logMsg(`[계정 생성 중] ${acc.email} ...`);
+                
+                // 1. Auth 회원가입
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: acc.email,
+                    password: acc.password
+                });
+
+                if (authError) {
+                    logMsg(`실패: ${authError.message}`, true);
+                    continue;
+                }
+
+                if (authData.user) {
+                    // 2. public.users 테이블에 프로필 정보 삽입
+                    const { error: dbError } = await supabase
+                        .from('users')
+                        .insert([{
+                            id: authData.user.id,
+                            email: acc.email,
+                            company_name: acc.company,
+                            full_name: acc.name,
+                            role: acc.role
+                        }]);
+
+                    if (dbError) {
+                        logMsg(`프로필 DB 저장 실패: ${dbError.message}`, true);
+                    } else {
+                        logMsg(`완료: ${acc.company} (${acc.name}) 계정 생성 성공`);
+                    }
+                }
+            }
+
+            logMsg('==================================');
+            logMsg('모든 작업이 완료되었습니다.');
+            logMsg('이제 index.html 에서 해당 아이디로 로그인 테스트를 진행하실 수 있습니다.');
+            document.getElementById('btn-create').disabled = false;
+        });
+    </script>
+</body>
+</html>

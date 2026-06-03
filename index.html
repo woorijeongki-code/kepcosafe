@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>한국전력공사 안전 소통 플랫폼</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#0a4297">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1032/1032989.png">
+    
+    <!-- Tailwind CSS (Development ONLY. Should be compiled for Production) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0a4297',
+                        secondary: '#f1f5f9',
+                        brandRed: '#eb3223',
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen w-screen overflow-hidden flex flex-col font-sans">
+
+    <!-- 로그인 뷰 -->
+    <div id="view-login" class="flex-1 flex flex-col justify-center items-center p-6 h-full w-full bg-gradient-to-br from-blue-50 to-slate-100">
+        <div class="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl w-full max-w-md border border-white relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+            <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-blue-600 text-white mb-4 shadow-lg">
+                    <i class="fa-solid fa-hard-hat text-3xl"></i>
+                </div>
+                <h1 class="text-2xl font-black text-slate-800 tracking-tight">KEPCO 안전 소통 플랫폼</h1>
+                <p class="text-sm text-slate-500 mt-2 font-medium">한국전력공사 대덕유성지사 협력회사 전용</p>
+            </div>
+
+            <form id="login-form" class="space-y-5 relative z-10">
+                <div id="login-error" class="text-red-500 text-sm hidden font-medium text-center bg-red-50 py-2 rounded-xl border border-red-100"></div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5 pl-1">이메일 계정</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="email" id="login-email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all text-sm font-medium" placeholder="partner@kepco.com">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5 pl-1">비밀번호</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="password" id="login-password" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all text-sm font-medium" placeholder="비밀번호를 입력하세요">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-primary hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 mt-2">
+                    안전 플랫폼 로그인
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center text-xs text-slate-400 font-medium relative z-10">
+                <p>초기 비밀번호 분실 시 대덕유성지사 전력공급부 문의</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 앱 셸 (PC/Mobile 반응형) -->
+    <div id="view-app" class="flex-1 flex flex-col h-full w-full hidden bg-slate-50">
+        
+        <!-- PC 및 Mobile 공통 메인 헤더 -->
+        <header class="bg-[#0a4297] text-white flex justify-between items-center px-4 md:px-6 py-3 shrink-0 shadow-md relative z-30">
+            <div class="flex items-center gap-3">
+                <img src="https://cdn-icons-png.flaticon.com/512/1032/1032989.png" alt="KEPCO Logo" class="w-8 h-8 filter brightness-0 invert">
+                <div class="hidden md:block">
+                    <h1 class="text-lg font-bold leading-tight">한전 대덕유성지사 협력회사 안전소통 플랫폼</h1>
+                    <p class="text-[10px] text-blue-200 opacity-80 uppercase tracking-widest">Safety Communication Dashboard</p>
+                </div>
+                <div class="md:hidden">
+                    <h1 class="text-base font-bold">안전소통 플랫폼</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- 알림 종소리 -->
+                <div class="relative cursor-pointer hover:text-blue-200 transition-colors">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span id="nav-badge-bell" class="hidden absolute -top-1 -right-1 bg-brandRed text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#0a4297]">0</span>
+                </div>
+                
+                <!-- PC 프로필 -->
+                <div class="hidden md:flex items-center gap-4">
+                    <div class="text-right flex flex-col justify-center">
+                        <p class="text-sm font-bold leading-tight" id="user-company">소속 회사</p>
+                        <p class="text-[10px] text-blue-200 mt-0.5">협력회사 파트너 계정</p>
+                    </div>
+                    
+                    <!-- 독립된 로그아웃 버튼 -->
+                    <button id="btn-logout" class="bg-blue-800 hover:bg-brandRed text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm border border-blue-700">
+                        <i class="fa-solid fa-sign-out-alt"></i> 로그아웃
+                    </button>
+                </div>
+
+                <!-- 모바일 햄버거 -->
+                <button class="md:hidden text-white text-xl" id="btn-mobile-menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 레이아웃 컨테이너 (사이드바 + 콘텐츠) -->
+        <div class="flex-1 flex overflow-hidden relative">
+            
+            <!-- PC 사이드바 (LNB) -->
+            <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col shrink-0 z-20 shadow-sm" id="sidebar">
+                <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                    <a href="#dashboard" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-primary bg-blue-50">
+                        <i class="fa-solid fa-house w-5 text-center"></i> 홈 대시보드
+                    </a>
+                    <a href="#sos" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-triangle-exclamation w-5 text-center text-brandRed"></i> 긴급 알림 서비스
+                    </a>
+                    <a href="#notices" class="nav-link flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-bullhorn w-5 text-center text-purple-600"></i> 안전공지 & 교육자료실</div>
+                        <span id="nav-badge-notice" class="hidden bg-brandRed text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                    </a>
+                    <a href="#golden_rule" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-regular fa-file-lines w-5 text-center text-amber-500"></i> 골든룰 11 & 안전작업 수칙
+                    </a>
+                    <a href="#feedback" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-clipboard-check w-5 text-center text-green-600"></i> 무정전회의록 & 자료 피드백
+                    </a>
+                    <a href="#methods" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-screwdriver-wrench w-5 text-center text-teal-600"></i> 작업공법
+                    </a>
+                    <a href="#inspections" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-list-check w-5 text-center text-cyan-600"></i> 안전점검
+                    </a>
+                    <a href="#cases" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-regular fa-lightbulb w-5 text-center text-orange-500"></i> 사고사례 & 안전우수사례
+                    </a>
+                    <a href="#suggestions" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-comment-dots w-5 text-center text-blue-500"></i> 건의사항 & 질문하기
+                    </a>
+                    
+                    <!-- 관리자 전용 메뉴 (기본 숨김) -->
+                    <div id="nav-admin-section" class="hidden mt-4 pt-4 border-t border-slate-100">
+                        <p class="px-4 text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Admin Tools</p>
+                        <a href="#admin_pledge" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-primary bg-primary/5 hover:bg-primary/10 transition-colors mb-1">
+                            <i class="fa-solid fa-chart-pie w-5 text-center"></i> 일일 서약 통계
+                        </a>
+                        <a href="#partners" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-primary bg-primary/5 hover:bg-primary/10 transition-colors">
+                            <i class="fa-solid fa-users-gear w-5 text-center"></i> 협력사 관리
+                        </a>
+                    </div>
+                </nav>
+                
+                <!-- 사이드바 하단 정보 -->
+                <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 mb-2 shadow-sm text-center">
+                        <div class="text-xs text-slate-500 mb-1 flex items-center justify-center gap-1"><i class="fa-solid fa-headset"></i> 안전 상담·문의</div>
+                        <div class="font-bold text-slate-800 text-base">042-333-0231, 2</div>
+                        <div class="text-[10px] text-slate-400 mt-1">평일 09:00 ~ 18:00</div>
+                    </div>
+                    <div class="text-[9px] text-slate-400 text-center mt-3">
+                        &copy; 2024 KEPCO DaeDeok Yuseong Branch. All rights reserved.
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 메인 콘텐츠 영역 -->
+            <main id="app-content" class="flex-1 overflow-y-auto bg-[#f4f7fb] relative scroll-smooth pb-20 md:pb-0">
+                <!-- 동적 렌더링 -->
+            </main>
+        </div>
+
+        <!-- 모바일 하단 네비게이션바 (Mobile 전용) -->
+        <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 w-full z-30 md:hidden flex justify-around items-center px-2 py-1 pb-safe shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+            <a href="#dashboard" class="nav-link mobile-nav flex flex-col items-center p-2 text-primary font-bold">
+                <i class="fa-solid fa-house text-xl mb-1"></i>
+                <span class="text-[10px]">홈</span>
+            </a>
+            <a href="#notices" class="nav-link mobile-nav flex flex-col items-center p-2 text-slate-400 hover:text-slate-600 transition-colors relative">
+                <i class="fa-solid fa-bullhorn text-xl mb-1"></i>
+                <span id="mobile-badge-notice" class="hidden absolute top-1 right-1 w-2 h-2 bg-brandRed rounded-full"></span>
+                <span class="text-[10px] font-medium">안전공지</span>
+            </a>
+            <a href="#golden_rule" class="nav-link mobile-nav flex flex-col items-center p-2 text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fa-solid fa-file-lines text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">안전수칙</span>
+            </a>
+            <a href="#profile" class="mobile-nav flex flex-col items-center p-2 text-slate-400 hover:text-slate-600 transition-colors" id="btn-mobile-profile">
+                <i class="fa-solid fa-user text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">내 정보</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- 로딩 오버레이 -->
+    <div id="loading-overlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col justify-center items-center">
+        <div class="loader mb-4"></div>
+        <p class="text-sm font-bold text-slate-500 animate-pulse">데이터를 불러오는 중입니다...</p>
+    </div>
+
+    <!-- Core Scripts -->
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- App Logic -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    
+    <!-- App Framework Initialization -->
+    <script src="js/app.js"></script>
+    
+    <!-- Feature Modules -->
+    <script src="js/modules/dashboard.js"></script>
+    <script src="js/modules/sos.js"></script>
+    <script src="js/modules/golden_rule.js"></script>
+    <script src="js/modules/suggestions.js"></script>
+    <script src="js/modules/feedback.js"></script>
+    <script src="js/modules/methods.js"></script>
+    <script src="js/modules/inspections.js"></script>
+    <script src="js/modules/notices.js"></script>
+    <script src="js/modules/cases.js"></script>
+    <script src="js/modules/partners.js"></script>
+    <script src="js/modules/admin_pledge.js"></script>
+    
+    <!-- PWA Registration / Unregistration (Dev Mode Cache Clear) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // 1. Service Worker Unregister
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('ServiceWorker unregistered successfully.');
+                    }
+                });
+                
+                // 2. Nuke all CacheStorage (강제 캐시 삭제)
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        for (let name of names) {
+                            caches.delete(name);
+                            console.log('Deleted cache:', name);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

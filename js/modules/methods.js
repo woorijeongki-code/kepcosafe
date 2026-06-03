@@ -101,10 +101,28 @@ window.Modules['methods'] = {
                     return;
                 }
                 
-                showLoading(true);
+                // 실제 파일 업로드 로직
                 let fileUrl = null;
                 if (hasFile) {
-                    fileUrl = 'mock_attachment_' + Date.now() + '.pdf';
+                    const file = fileInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+                    
+                    const { data: uploadData, error: uploadError } = await AppState.supabase.storage
+                        .from('attachments')
+                        .upload(fileName, file);
+                        
+                    if (uploadError) {
+                        alert('파일 업로드 실패: ' + uploadError.message);
+                        showLoading(false);
+                        return;
+                    }
+                    
+                    const { data: publicUrlData } = AppState.supabase.storage
+                        .from('attachments')
+                        .getPublicUrl(fileName);
+                        
+                    fileUrl = publicUrlData.publicUrl;
                 }
 
                 let error;
@@ -151,9 +169,9 @@ window.Modules['methods'] = {
                         <div class="flex-1 min-w-0">
                             <h4 class="font-bold text-slate-800 mb-1">[Mock] 배전선로 활선작업 표준공법</h4>
                             <p class="text-xs text-slate-500 line-clamp-2">활선작업 시 필수적으로 지켜야 할 이격거리 및 절연용구 착용 기준에 대한 상세 설명서입니다...</p>
-                            <button class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 (Mock)')">
+                            <a href="#" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
                                 <i class="fa-solid fa-paperclip"></i> 활선작업_표준공법.pdf
-                            </button>
+                            </a>
                             <span class="text-[10px] text-slate-400 mt-2 block">2026-06-03</span>
                         </div>
                     </div>
@@ -203,9 +221,9 @@ window.Modules['methods'] = {
                         <h4 class="font-bold text-slate-800 mb-1">${item.title}</h4>
                         <p class="text-xs text-slate-500 whitespace-pre-wrap">${item.content || ''}</p>
                         ${item.file_url ? `
-                        <button class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 기능은 파일 스토리지가 연결되어야 작동합니다.')">
+                        <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
                             <i class="fa-solid fa-paperclip"></i> 첨부자료 확인
-                        </button>
+                        </a>
                         ` : ''}
                         <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>
                     </div>

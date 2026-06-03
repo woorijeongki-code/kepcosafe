@@ -119,10 +119,28 @@ window.Modules['notices'] = {
                 }
                 
                 showLoading(true);
-                // 파일 업로드 로직 Mock
+                // 실제 파일 업로드 로직
                 let fileUrl = null;
                 if (hasFile) {
-                    fileUrl = 'mock_attachment_' + Date.now() + '.pdf';
+                    const file = fileInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+                    
+                    const { data: uploadData, error: uploadError } = await AppState.supabase.storage
+                        .from('attachments')
+                        .upload(fileName, file);
+                        
+                    if (uploadError) {
+                        alert('파일 업로드 실패: ' + uploadError.message);
+                        showLoading(false);
+                        return;
+                    }
+                    
+                    const { data: publicUrlData } = AppState.supabase.storage
+                        .from('attachments')
+                        .getPublicUrl(fileName);
+                        
+                    fileUrl = publicUrlData.publicUrl;
                 }
 
                 let error;
@@ -265,9 +283,9 @@ window.Modules['notices'] = {
                             <h4 class="font-bold text-sm text-slate-800 truncate mb-1">${item.title}</h4>
                             <p class="text-xs text-slate-500 truncate">${item.content || ''}</p>
                             ${item.file_url ? `
-                            <button class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="alert('첨부파일 다운로드 기능은 파일 스토리지가 연결되어야 작동합니다.')">
+                            <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
                                 <i class="fa-solid fa-paperclip"></i> 첨부파일 확인
-                            </button>
+                            </a>
                             ` : ''}
                             <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>
                         </div>
@@ -285,9 +303,9 @@ window.Modules['notices'] = {
                                 <h4 class="font-bold text-sm text-slate-800 truncate mb-1">${item.title}</h4>
                                 <p class="text-[10px] text-slate-400">${item.content || '구글 드라이브 대용량 공유 링크'}</p>
                                 ${item.file_url ? `
-                                <button class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="alert('첨부파일 다운로드 기능은 파일 스토리지가 연결되어야 작동합니다.')">
+                                <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
                                     <i class="fa-solid fa-paperclip"></i> 붙임파일 확인
-                                </button>
+                                </a>
                                 ` : ''}
                             </div>
                         </div>

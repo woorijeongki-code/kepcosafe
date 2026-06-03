@@ -102,7 +102,25 @@ window.Modules['sos'] = {
                 showLoading(true);
                 let fileUrl = null;
                 if (hasFile) {
-                    fileUrl = 'mock_attachment_' + Date.now() + '.pdf';
+                    const file = fileInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+                    
+                    const { data: uploadData, error: uploadError } = await AppState.supabase.storage
+                        .from('attachments')
+                        .upload(fileName, file);
+                        
+                    if (uploadError) {
+                        alert('파일 업로드 실패: ' + uploadError.message);
+                        showLoading(false);
+                        return;
+                    }
+                    
+                    const { data: publicUrlData } = AppState.supabase.storage
+                        .from('attachments')
+                        .getPublicUrl(fileName);
+                        
+                    fileUrl = publicUrlData.publicUrl;
                 }
 
                 const { error } = await AppState.supabase
@@ -155,9 +173,9 @@ window.Modules['sos'] = {
                 <div>
                     <p class="text-sm font-bold text-slate-800 mb-1">${alert.message}</p>
                     ${alert.file_url ? `
-                    <button class="mb-2 text-[10px] bg-white hover:bg-slate-100 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-red-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 기능은 파일 스토리지가 연결되어야 작동합니다.')">
+                    <a href="${alert.file_url}" target="_blank" rel="noopener noreferrer" class="mb-2 text-[10px] bg-white hover:bg-slate-100 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-red-200" onclick="event.stopPropagation();">
                         <i class="fa-solid fa-paperclip"></i> 첨부파일 확인
-                    </button>
+                    </a>
                     ` : ''}
                     <p class="text-[10px] text-slate-500">${new Date(alert.created_at).toLocaleString()}</p>
                 </div>

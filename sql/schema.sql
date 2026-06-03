@@ -15,6 +15,7 @@ CREATE TABLE public.sos_alerts (
     sender_id UUID REFERENCES public.users(id) ON DELETE SET NULL,
     message TEXT NOT NULL,
     level TEXT DEFAULT 'danger' CHECK (level IN ('info', 'warning', 'danger')),
+    file_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
 
@@ -25,6 +26,7 @@ CREATE TABLE public.suggestions (
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'resolved')),
+    file_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW()),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
@@ -56,6 +58,7 @@ CREATE TABLE public.feedbacks (
     target_id UUID NOT NULL, -- 연관된 아이템의 ID
     author_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
+    file_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
 
@@ -66,6 +69,7 @@ CREATE TABLE public.notices (
     content TEXT,
     category TEXT DEFAULT 'notice' CHECK (category IN ('notice', 'education')),
     drive_link TEXT, -- 구글 드라이브 대용량 공유 링크
+    file_url TEXT,
     created_by UUID REFERENCES public.users(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
@@ -77,6 +81,27 @@ CREATE TABLE public.cases (
     content TEXT NOT NULL,
     category TEXT DEFAULT 'accident' CHECK (category IN ('accident', 'best_practice')),
     image_url TEXT,
+    file_url TEXT,
+    created_by UUID REFERENCES public.users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
+);
+
+-- 9. methods 테이블 (작업공법)
+CREATE TABLE public.methods (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    file_url TEXT,
+    created_by UUID REFERENCES public.users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
+);
+
+-- 10. inspections 테이블 (안전점검)
+CREATE TABLE public.inspections (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    file_url TEXT,
     created_by UUID REFERENCES public.users(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
@@ -95,6 +120,8 @@ ALTER TABLE public.meeting_minutes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.feedbacks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.methods ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inspections ENABLE ROW LEVEL SECURITY;
 
 -- users 정책: 로그인한 사용자는 모든 프로필을 볼 수 있음 (작성자 이름 표시 용도)
 CREATE POLICY "Users are viewable by authenticated users" ON public.users FOR SELECT USING (auth.role() = 'authenticated');

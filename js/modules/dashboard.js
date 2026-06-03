@@ -10,7 +10,7 @@ window.Modules['dashboard'] = {
                         <i class="fa-regular fa-building"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-800"><span id="dash-user-company">${window.AppState && window.AppState.profile ? window.AppState.profile.company_name : '한국전력공사 대덕유성지사'}</span>, 안전한 하루 되세요!</h2>
+                        <h2 class="text-xl font-bold text-slate-800"><span id="dash-user-company">${typeof AppState !== 'undefined' && AppState.profile ? AppState.profile.company_name : '한국전력공사 대덕유성지사'}</span>, 안전한 하루 되세요!</h2>
                         <p class="text-xs text-slate-500 font-medium">오늘도 안전이 최우선입니다.</p>
                     </div>
                 </div>
@@ -245,8 +245,8 @@ window.Modules['dashboard'] = {
     init() {
         // 회사 이름 표시 업데이트
         const compEl = document.getElementById('dash-user-company');
-        if (compEl && window.AppState && window.AppState.profile) {
-            compEl.textContent = window.AppState.profile.company_name || '한국전력공사 대덕유성지사';
+        if (compEl && typeof AppState !== 'undefined' && AppState.profile) {
+            compEl.textContent = AppState.profile.company_name || '한국전력공사 대덕유성지사';
         }
         
         // Supabase에서 실시간 통계 데이터 불러오기
@@ -254,8 +254,8 @@ window.Modules['dashboard'] = {
     },
 
     async loadDashboardData() {
-        if (!window.AppState || !window.AppState.supabase) return;
-        const supabase = window.AppState.supabase;
+        if (typeof AppState === 'undefined' || !AppState.supabase) return;
+        const supabase = AppState.supabase;
 
         try {
             // 1. 긴급 알림 현황 (최근 7일 기준 카운트)

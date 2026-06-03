@@ -51,14 +51,14 @@ CREATE TABLE public.meeting_minutes (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
 
--- 6. feedbacks 테이블 (안전자료 피드백)
-CREATE TABLE public.feedbacks (
+-- 6. feedback 테이블 (안전제안 피드백)
+CREATE TABLE public.feedback (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    target_type TEXT NOT NULL CHECK (target_type IN ('meeting', 'notice', 'case')),
-    target_id UUID NOT NULL, -- 연관된 아이템의 ID
-    author_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    category TEXT NOT NULL,
+    title TEXT NOT NULL,
     content TEXT NOT NULL,
     file_url TEXT,
+    author_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
 );
 
@@ -111,17 +111,29 @@ CREATE TABLE public.inspections (
 -- 데이터 보안을 위해 테이블별 읽기/쓰기 권한을 설정합니다.
 -- ==============================================================================
 
+-- 11. golden_rule_logs 테이블 (골든룰 서약 기록)
+CREATE TABLE public.golden_rule_logs (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    company_name TEXT NOT NULL,
+    full_name TEXT NOT NULL,
+    worker_name TEXT NOT NULL,
+    pledge_date TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::TEXT, NOW())
+);
+
 -- RLS 활성화
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sos_alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.suggestions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.suggestion_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.meeting_minutes ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.feedbacks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.feedback ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cases ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.methods ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inspections ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.golden_rule_logs ENABLE ROW LEVEL SECURITY;
 
 -- users 정책: 로그인한 사용자는 모든 프로필을 볼 수 있음 (작성자 이름 표시 용도)
 CREATE POLICY "Users are viewable by authenticated users" ON public.users FOR SELECT USING (auth.role() = 'authenticated');
@@ -161,9 +173,14 @@ CREATE POLICY "Cases insertable by admin" ON public.cases FOR INSERT WITH CHECK 
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
 );
 
--- feedbacks: 누구나 작성 가능.
-CREATE POLICY "Feedbacks viewable by everyone" ON public.feedbacks FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY "Feedbacks insertable by users" ON public.feedbacks FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+-- feedback: 누구나 작성 가능.
+CREATE POLICY "Feedback viewable by everyone" ON public.feedback FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Feedback insertable by users" ON public.feedback FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Feedback updateable by users" ON public.feedback FOR UPDATE USING (auth.uid() = author_id);
+
+-- golden_rule_logs: 본인 기록 열람 및 등록 가능
+CREATE POLICY "Golden logs insertable by users" ON public.golden_rule_logs FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Golden logs viewable by users" ON public.golden_rule_logs FOR SELECT USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'));
 
 -- Realtime 연동을 위한 Publication 설정 (sos_alerts는 실시간 감지 필요)
 BEGIN;

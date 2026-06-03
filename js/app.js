@@ -11,6 +11,18 @@
 
 window.Modules = {}; // 각 기능 모듈이 자신을 등록할 객체
 
+// 전역 폼 리셋 오버라이드: 폼 초기화 시 임시저장 데이터도 함께 삭제
+const originalReset = HTMLFormElement.prototype.reset;
+HTMLFormElement.prototype.reset = function() {
+    const inputs = this.querySelectorAll('input:not([type="file"]):not([type="password"]):not([type="hidden"]), textarea');
+    inputs.forEach(input => {
+        if (input.id && window.AppRouter && window.AppRouter.currentModule) {
+            sessionStorage.removeItem(`draft_${window.AppRouter.currentModule}_${input.id}`);
+        }
+    });
+    originalReset.apply(this);
+};
+
 window.AppRouter = {
     currentModule: null,
 
@@ -54,11 +66,36 @@ window.AppRouter = {
             // 약간의 딜레이 후 init 실행하여 DOM 렌더링 보장
             setTimeout(() => {
                 module.init();
+                this.setupAutoSave();
+            }, 0);
+        } else {
+            setTimeout(() => {
+                this.setupAutoSave();
             }, 0);
         }
 
         this.currentModule = moduleName;
         this.updateNavHighlight(moduleName);
+    },
+
+    setupAutoSave() {
+        const inputs = document.querySelectorAll('#app-content input:not([type="file"]):not([type="password"]):not([type="hidden"]), #app-content textarea');
+        
+        inputs.forEach(input => {
+            if (!input.id) return;
+            const draftKey = `draft_${this.currentModule}_${input.id}`;
+            
+            // 1. 임시저장된 값 복원
+            const savedValue = sessionStorage.getItem(draftKey);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+            
+            // 2. 입력 시 실시간 임시저장
+            input.addEventListener('input', (e) => {
+                sessionStorage.setItem(draftKey, e.target.value);
+            });
+        });
     },
 
     updateNavHighlight(moduleName) {

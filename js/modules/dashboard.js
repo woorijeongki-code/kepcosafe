@@ -22,9 +22,9 @@ window.Modules['dashboard'] = {
                             <i class="fa-solid fa-bell"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-500">긴급/알림 현황</p>
-                            <p class="text-xl font-black text-slate-800 mt-0.5">0 <span class="text-sm font-medium text-slate-500">건</span></p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">진행중 0 / 확인필요 0</p>
+                            <p class="text-[11px] font-bold text-slate-500">긴급 알림 현황</p>
+                            <p class="text-xl font-black text-slate-800 mt-0.5"><span id="stat-sos-count">0</span> <span class="text-sm font-medium text-slate-500">건</span></p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">최근 7일 기준</p>
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -32,9 +32,9 @@ window.Modules['dashboard'] = {
                             <i class="fa-solid fa-bullhorn"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-500">읽지 않은 공지</p>
-                            <p class="text-xl font-black text-slate-800 mt-0.5">0 <span class="text-sm font-medium text-slate-500">건</span></p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">새로운 공지가 없습니다</p>
+                            <p class="text-[11px] font-bold text-slate-500">전체 공지사항</p>
+                            <p class="text-xl font-black text-slate-800 mt-0.5"><span id="stat-notice-count">0</span> <span class="text-sm font-medium text-slate-500">건</span></p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">시스템 등록 기준</p>
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -42,9 +42,9 @@ window.Modules['dashboard'] = {
                             <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-500">교육 이수 현황</p>
-                            <p class="text-xl font-black text-slate-800 mt-0.5">0/0 <span class="text-sm font-medium text-slate-500">과정</span></p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">배정된 교육 없음</p>
+                            <p class="text-[11px] font-bold text-slate-500">교육 자료 현황</p>
+                            <p class="text-xl font-black text-slate-800 mt-0.5"><span id="stat-edu-count">0</span> <span class="text-sm font-medium text-slate-500">과정</span></p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">시스템 등록 기준</p>
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -52,9 +52,9 @@ window.Modules['dashboard'] = {
                             <i class="fa-solid fa-users"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-500">협력회사 참여 현황</p>
-                            <p class="text-xl font-black text-slate-800 mt-0.5">0 <span class="text-sm font-medium text-slate-500">개사</span></p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">현재 등록 대기중</p>
+                            <p class="text-[11px] font-bold text-slate-500">플랫폼 가입 현황</p>
+                            <p class="text-xl font-black text-slate-800 mt-0.5"><span id="stat-user-count">0</span> <span class="text-sm font-medium text-slate-500">명</span></p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">총 가입자 수</p>
                         </div>
                     </div>
                 </div>
@@ -201,9 +201,11 @@ window.Modules['dashboard'] = {
                             <h3 class="font-bold text-slate-800">최근 공지사항</h3>
                             <a href="#notices" class="text-xs text-slate-400 hover:text-primary">더보기 <i class="fa-solid fa-chevron-right text-[10px]"></i></a>
                         </div>
-                        <div class="flex flex-col items-center justify-center py-6 text-slate-400">
-                            <i class="fa-regular fa-folder-open text-2xl mb-2"></i>
-                            <p class="text-xs font-medium">등록된 공지사항이 없습니다.</p>
+                        <div id="dash-recent-notices" class="flex flex-col gap-2 min-h-[80px]">
+                            <div class="flex flex-col items-center justify-center py-6 text-slate-400">
+                                <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i>
+                                <p class="text-xs font-medium">불러오는 중...</p>
+                            </div>
                         </div>
                     </div>
 
@@ -213,21 +215,25 @@ window.Modules['dashboard'] = {
                             <h3 class="font-bold text-slate-800">최근 긴급 알림</h3>
                             <a href="#sos" class="text-xs text-slate-400 hover:text-primary">더보기 <i class="fa-solid fa-chevron-right text-[10px]"></i></a>
                         </div>
-                        <div class="flex flex-col items-center justify-center py-6 text-slate-400">
-                            <i class="fa-regular fa-bell-slash text-2xl mb-2"></i>
-                            <p class="text-xs font-medium">새로운 긴급 알림이 없습니다.</p>
+                        <div id="dash-recent-sos" class="flex flex-col gap-2 min-h-[80px]">
+                            <div class="flex flex-col items-center justify-center py-6 text-slate-400">
+                                <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i>
+                                <p class="text-xs font-medium">불러오는 중...</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- 안전우수사례 추천 -->
+                    <!-- 최근 안전사례 -->
                     <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-slate-800">안전우수사례 추천</h3>
+                            <h3 class="font-bold text-slate-800">최근 사고/우수사례</h3>
                             <a href="#cases" class="text-xs text-slate-400 hover:text-primary">더보기 <i class="fa-solid fa-chevron-right text-[10px]"></i></a>
                         </div>
-                        <div class="flex flex-col items-center justify-center py-6 text-slate-400">
-                            <i class="fa-regular fa-image text-2xl mb-2"></i>
-                            <p class="text-xs font-medium">등록된 사례가 없습니다.</p>
+                        <div id="dash-recent-cases" class="flex flex-col gap-2 min-h-[80px]">
+                            <div class="flex flex-col items-center justify-center py-6 text-slate-400">
+                                <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i>
+                                <p class="text-xs font-medium">불러오는 중...</p>
+                            </div>
                         </div>
                     </div>
 
@@ -241,6 +247,139 @@ window.Modules['dashboard'] = {
         const compEl = document.getElementById('dash-user-company');
         if (compEl && window.AppState && window.AppState.profile) {
             compEl.textContent = window.AppState.profile.company_name || '한국전력공사 대덕유성지사';
+        }
+        
+        // Supabase에서 실시간 통계 데이터 불러오기
+        this.loadDashboardData();
+    },
+
+    async loadDashboardData() {
+        if (!window.AppState || !window.AppState.supabase) return;
+        const supabase = window.AppState.supabase;
+
+        try {
+            // 1. 긴급 알림 현황 (최근 7일 기준 카운트)
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            
+            const { count: sosCount, error: err1 } = await supabase
+                .from('sos_alerts')
+                .select('*', { count: 'exact', head: true })
+                .gte('created_at', sevenDaysAgo.toISOString());
+                
+            if (!err1 && document.getElementById('stat-sos-count')) {
+                document.getElementById('stat-sos-count').textContent = sosCount || 0;
+            }
+
+            // 2. 공지사항 및 교육자료 현황
+            const { count: noticeCount, error: err2 } = await supabase
+                .from('notices')
+                .select('*', { count: 'exact', head: true })
+                .eq('category', 'notice');
+                
+            if (!err2 && document.getElementById('stat-notice-count')) {
+                document.getElementById('stat-notice-count').textContent = noticeCount || 0;
+            }
+            
+            const { count: eduCount, error: err3 } = await supabase
+                .from('notices')
+                .select('*', { count: 'exact', head: true })
+                .eq('category', 'education');
+                
+            if (!err3 && document.getElementById('stat-edu-count')) {
+                document.getElementById('stat-edu-count').textContent = eduCount || 0;
+            }
+
+            // 3. 플랫폼 가입자 수 현황
+            const { count: userCount, error: err4 } = await supabase
+                .from('users')
+                .select('*', { count: 'exact', head: true });
+                
+            if (!err4 && document.getElementById('stat-user-count')) {
+                document.getElementById('stat-user-count').textContent = userCount || 0;
+            }
+
+            // 4. 최근 공지사항 리스트 (최대 3개)
+            const { data: recentNotices } = await supabase
+                .from('notices')
+                .select('id, title, created_at')
+                .eq('category', 'notice')
+                .order('created_at', { ascending: false })
+                .limit(3);
+                
+            const noticesEl = document.getElementById('dash-recent-notices');
+            if (noticesEl) {
+                if (recentNotices && recentNotices.length > 0) {
+                    noticesEl.innerHTML = recentNotices.map(item => `
+                        <a href="#notices" class="text-xs bg-slate-50 hover:bg-slate-100 p-2 rounded-lg flex justify-between items-center transition-colors">
+                            <span class="truncate font-medium text-slate-700">${item.title}</span>
+                            <span class="text-[9px] text-slate-400 shrink-0 ml-2">${new Date(item.created_at).toLocaleDateString()}</span>
+                        </a>
+                    `).join('');
+                } else {
+                    noticesEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-4 text-slate-400">
+                            <i class="fa-regular fa-folder-open text-xl mb-1"></i>
+                            <p class="text-[10px] font-medium">등록된 공지사항이 없습니다.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // 5. 최근 긴급 알림 리스트 (최대 3개)
+            const { data: recentSos } = await supabase
+                .from('sos_alerts')
+                .select('id, message, created_at')
+                .order('created_at', { ascending: false })
+                .limit(3);
+                
+            const sosEl = document.getElementById('dash-recent-sos');
+            if (sosEl) {
+                if (recentSos && recentSos.length > 0) {
+                    sosEl.innerHTML = recentSos.map(item => `
+                        <a href="#sos" class="text-xs bg-red-50 hover:bg-red-100 p-2 rounded-lg flex justify-between items-center transition-colors text-brandRed">
+                            <span class="truncate font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ${item.message}</span>
+                            <span class="text-[9px] text-red-300 shrink-0 ml-2">${new Date(item.created_at).toLocaleDateString()}</span>
+                        </a>
+                    `).join('');
+                } else {
+                    sosEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-4 text-slate-400">
+                            <i class="fa-regular fa-bell-slash text-xl mb-1"></i>
+                            <p class="text-[10px] font-medium">새로운 긴급 알림이 없습니다.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // 6. 최근 안전사례 리스트 (최대 3개)
+            const { data: recentCases } = await supabase
+                .from('cases')
+                .select('id, title, created_at')
+                .order('created_at', { ascending: false })
+                .limit(3);
+                
+            const casesEl = document.getElementById('dash-recent-cases');
+            if (casesEl) {
+                if (recentCases && recentCases.length > 0) {
+                    casesEl.innerHTML = recentCases.map(item => `
+                        <a href="#cases" class="text-xs bg-orange-50 hover:bg-orange-100 p-2 rounded-lg flex justify-between items-center transition-colors text-orange-700">
+                            <span class="truncate font-medium"><i class="fa-regular fa-image mr-1"></i> ${item.title}</span>
+                            <span class="text-[9px] text-orange-300 shrink-0 ml-2">${new Date(item.created_at).toLocaleDateString()}</span>
+                        </a>
+                    `).join('');
+                } else {
+                    casesEl.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-4 text-slate-400">
+                            <i class="fa-regular fa-image text-xl mb-1"></i>
+                            <p class="text-[10px] font-medium">등록된 사례가 없습니다.</p>
+                        </div>
+                    `;
+                }
+            }
+
+        } catch (error) {
+            console.error('대시보드 데이터 로드 실패:', error);
         }
     }
 };

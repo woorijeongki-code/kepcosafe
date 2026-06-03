@@ -137,7 +137,11 @@ window.Modules['sos'] = {
                     alert('발송 실패: ' + error.message);
                 } else {
                     form.reset();
-                    // Realtime will catch it and update UI
+                    // Realtime이 작동하지 않을 경우를 대비해 직접 목록 갱신
+                    this.loadHistory();
+                    
+                    // 성공 메시지 띄우기
+                    alert('긴급 알림이 성공적으로 발송되었습니다.');
                 }
             });
         }

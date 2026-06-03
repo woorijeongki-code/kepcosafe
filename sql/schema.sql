@@ -145,11 +145,17 @@ CREATE POLICY "SOS viewable by everyone" ON public.sos_alerts FOR SELECT USING (
 CREATE POLICY "SOS insertable by admin" ON public.sos_alerts FOR INSERT WITH CHECK (
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
 );
+CREATE POLICY "SOS deleteable by admin" ON public.sos_alerts FOR DELETE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- suggestions 정책: 누구나 보고 쓸 수 있음. 수정/삭제는 작성자와 admin만.
 CREATE POLICY "Suggestions viewable by everyone" ON public.suggestions FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Suggestions insertable by users" ON public.suggestions FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Suggestions updateable by author or admin" ON public.suggestions FOR UPDATE USING (
+    auth.uid() = author_id OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Suggestions deleteable by author or admin" ON public.suggestions FOR DELETE USING (
     auth.uid() = author_id OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
 );
 
@@ -162,9 +168,21 @@ CREATE POLICY "Meetings viewable by everyone" ON public.meeting_minutes FOR SELE
 CREATE POLICY "Meetings insertable by admin" ON public.meeting_minutes FOR INSERT WITH CHECK (
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
 );
+CREATE POLICY "Meetings updateable by admin" ON public.meeting_minutes FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Meetings deleteable by admin" ON public.meeting_minutes FOR DELETE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
 
 CREATE POLICY "Notices viewable by everyone" ON public.notices FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Notices insertable by admin" ON public.notices FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Notices updateable by admin" ON public.notices FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Notices deleteable by admin" ON public.notices FOR DELETE USING (
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
 );
 
@@ -172,15 +190,49 @@ CREATE POLICY "Cases viewable by everyone" ON public.cases FOR SELECT USING (aut
 CREATE POLICY "Cases insertable by admin" ON public.cases FOR INSERT WITH CHECK (
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
 );
+CREATE POLICY "Cases updateable by admin" ON public.cases FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Cases deleteable by admin" ON public.cases FOR DELETE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+
+CREATE POLICY "Methods viewable by everyone" ON public.methods FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Methods insertable by admin" ON public.methods FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Methods updateable by admin" ON public.methods FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Methods deleteable by admin" ON public.methods FOR DELETE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+
+CREATE POLICY "Inspections viewable by everyone" ON public.inspections FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Inspections insertable by admin" ON public.inspections FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Inspections updateable by admin" ON public.inspections FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Inspections deleteable by admin" ON public.inspections FOR DELETE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- feedback: 누구나 작성 가능.
 CREATE POLICY "Feedback viewable by everyone" ON public.feedback FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Feedback insertable by users" ON public.feedback FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Feedback updateable by users" ON public.feedback FOR UPDATE USING (auth.uid() = author_id);
+CREATE POLICY "Feedback deleteable by author or admin" ON public.feedback FOR DELETE USING (
+    auth.uid() = author_id OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- golden_rule_logs: 본인 기록 열람 및 등록 가능
 CREATE POLICY "Golden logs insertable by users" ON public.golden_rule_logs FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Golden logs viewable by users" ON public.golden_rule_logs FOR SELECT USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'));
+CREATE POLICY "Golden logs deleteable by admin" ON public.golden_rule_logs FOR DELETE USING (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin')
+);
 
 -- Realtime 연동을 위한 Publication 설정 (sos_alerts는 실시간 감지 필요)
 BEGIN;

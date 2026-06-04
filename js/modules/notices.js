@@ -357,7 +357,58 @@ window.Modules['notices'] = {
             }
         }).join('');
 
-        // 이벤트 위임
+        // 상세 보기 이벤트 위임
+        listEl.querySelectorAll('.btn-view-notice').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.getAttribute('data-type');
+                const title = btn.getAttribute('data-title');
+                const content = btn.getAttribute('data-content');
+                const date = btn.getAttribute('data-date');
+                const fileUrl = btn.getAttribute('data-file');
+                const driveLink = btn.getAttribute('data-link');
+                
+                const badgeEl = document.getElementById('detail-category-badge');
+                if (badgeEl) {
+                    if (type === 'notice') {
+                        badgeEl.parentElement.innerHTML = '<i class="fa-regular fa-bell text-primary"></i> <span id="detail-category-badge">안전 공지</span>';
+                    } else {
+                        badgeEl.parentElement.innerHTML = '<i class="fa-brands fa-google-drive text-blue-600"></i> <span id="detail-category-badge">교육 자료실</span>';
+                    }
+                }
+                
+                document.getElementById('detail-title').textContent = title || '';
+                document.getElementById('detail-date').textContent = date ? new Date(date).toLocaleString() : '';
+                document.getElementById('detail-body').textContent = content || '';
+                
+                const attachContainer = document.getElementById('detail-attachment');
+                const linkBtn = document.getElementById('detail-link-btn');
+                
+                if (driveLink) {
+                    attachContainer.classList.remove('hidden');
+                    linkBtn.href = driveLink;
+                    linkBtn.className = 'inline-flex items-center gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2 rounded-xl text-sm font-bold transition-colors';
+                    linkBtn.innerHTML = '<i class="fa-brands fa-google-drive"></i> <span id="detail-link-text">자료 열람하기</span>';
+                } else if (fileUrl) {
+                    attachContainer.classList.remove('hidden');
+                    linkBtn.href = fileUrl;
+                    linkBtn.className = 'inline-flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-bold transition-colors border border-slate-200';
+                    linkBtn.innerHTML = '<i class="fa-solid fa-paperclip"></i> <span id="detail-link-text">첨부파일 열기</span>';
+                } else {
+                    attachContainer.classList.add('hidden');
+                }
+                
+                const modal = document.getElementById('notice-detail-modal');
+                const modalContent = document.getElementById('notice-detail-modal-content');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
+            });
+        });
+
+        // 수정/삭제 이벤트 위임
         if (isAdmin) {
             listEl.querySelectorAll('.btn-edit-notice').forEach(btn => {
                 btn.addEventListener('click', (e) => {

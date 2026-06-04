@@ -137,7 +137,8 @@ window.Modules['inspections'] = {
                     const res = await AppState.supabase.from('inspections').insert([{
                         title: title,
                         content: content,
-                        file_url: fileUrl
+                        file_url: fileUrl,
+                        created_by: AppState.user.id
                     }]);
                     error = res.error;
                 }

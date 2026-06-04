@@ -203,7 +203,8 @@ window.Modules['notices'] = {
                         title: title,
                         content: content,
                         drive_link: this.currentTab === 'education' ? link : null,
-                        file_url: fileUrl
+                        file_url: fileUrl,
+                        created_by: AppState.user.id
                     }]);
                     error = res.error;
                 }

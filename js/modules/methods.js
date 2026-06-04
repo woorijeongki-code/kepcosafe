@@ -144,7 +144,8 @@ window.Modules['methods'] = {
                         title: title,
                         content: content,
                         drive_link: link || null,
-                        file_url: fileUrl
+                        file_url: fileUrl,
+                        created_by: AppState.user.id
                     }]);
                     error = res.error;
                 }

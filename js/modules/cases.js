@@ -221,7 +221,7 @@ window.Modules['cases'] = {
     },
 
     async loadCases() {
-        const listEl = document.getElementById('cases-list');
+        const listEl = document.getElementById('case-list');
         listEl.innerHTML = '<div class="animate-pulse space-y-3 p-2"><div class="h-20 bg-slate-200 rounded-2xl w-full"></div><div class="h-20 bg-slate-200 rounded-2xl w-full"></div><div class="h-20 bg-slate-200 rounded-2xl w-full"></div></div>';
         
         if (!AppState.supabase) {

@@ -201,7 +201,7 @@ window.Modules['cases'] = {
                         title: title,
                         content: content,
                         file_url: fileUrl,
-                        author_id: AppState.user.id
+                        created_by: AppState.user.id
                     }]);
                     error = res.error;
                 }
@@ -294,7 +294,7 @@ window.Modules['cases'] = {
                 ? `background-image: url('${item.image_url}'); background-size: cover; background-position: center;` 
                 : '';
                 
-            const isAuthor = AppState.user && item.author_id === AppState.user.id;
+            const isAuthor = AppState.user && item.created_by === AppState.user.id;
             const canEdit = isAuthor || isAdmin;
 
             const editControls = canEdit ? `

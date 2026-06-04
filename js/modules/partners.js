@@ -195,6 +195,7 @@ window.Modules['partners'] = {
 
                         const { error: dbError } = await AppState.supabase.from('users').insert([{
                             id: newUserId,
+                            email: email,
                             company_name: company,
                             full_name: fullName,
                             role: 'user'

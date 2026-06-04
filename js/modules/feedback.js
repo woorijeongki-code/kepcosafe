@@ -302,7 +302,7 @@ window.Modules['feedback'] = {
             const editControls = (isAuthor || isAdmin) ? `
                 <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-4 top-4">
                     ${isAuthor ? `
-                    <button class="btn-edit-fb w-6 h-6 rounded bg-slate-200 text-slate-500 hover:text-primary hover:bg-blue-100 flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${item.content.replace(/"/g, '&quot;')}">
+                    <button class="btn-edit-fb w-6 h-6 rounded bg-slate-200 text-slate-500 hover:text-primary hover:bg-blue-100 flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}">
                         <i class="fa-solid fa-pen text-[10px]"></i>
                     </button>
                     ` : ''}

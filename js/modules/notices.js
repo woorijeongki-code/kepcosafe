@@ -301,7 +301,7 @@ window.Modules['notices'] = {
         listEl.innerHTML = data.map(item => {
             const editControls = isAdmin ? `
                 <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-4 top-4">
-                    <button class="btn-edit-notice w-6 h-6 rounded bg-slate-100 text-slate-500 hover:text-primary hover:bg-blue-50 flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-link="${(item.drive_link || '').replace(/"/g, '&quot;')}">
+                    <button class="btn-edit-notice w-6 h-6 rounded bg-slate-100 text-slate-500 hover:text-primary hover:bg-blue-50 flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-link="${(item.drive_link || '').replace(/"/g, '&quot;')}">
                         <i class="fa-solid fa-pen text-[10px]"></i>
                     </button>
                     <button class="btn-del-notice w-6 h-6 rounded bg-slate-100 text-slate-500 hover:text-brandRed hover:bg-red-50 flex items-center justify-center transition-colors" data-id="${item.id}">
@@ -312,7 +312,7 @@ window.Modules['notices'] = {
 
             if (this.currentTab === 'notice') {
                 return `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-3 cursor-pointer hover:bg-slate-50 relative group btn-view-notice" data-type="notice" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-3 cursor-pointer hover:bg-slate-50 relative group btn-view-notice" data-type="notice" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}">
                         ${editControls}
                         <div class="w-10 h-10 shrink-0 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center text-lg">
                             <i class="fa-regular fa-bell"></i>

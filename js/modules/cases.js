@@ -299,7 +299,7 @@ window.Modules['cases'] = {
 
             const editControls = canEdit ? `
                 <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 z-10">
-                    <button class="btn-edit-case w-6 h-6 rounded bg-black/50 text-white hover:text-primary hover:bg-white flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-image="${(item.image_url || '').replace(/"/g, '&quot;')}">
+                    <button class="btn-edit-case w-6 h-6 rounded bg-black/50 text-white hover:text-primary hover:bg-white flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-image="${(item.image_url || '').replace(/"/g, '&quot;')}">
                         <i class="fa-solid fa-pen text-[10px]"></i>
                     </button>
                     <button class="btn-del-case w-6 h-6 rounded bg-black/50 text-white hover:text-brandRed hover:bg-white flex items-center justify-center transition-colors" data-id="${item.id}">
@@ -309,7 +309,7 @@ window.Modules['cases'] = {
             ` : '';
 
             return `
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow relative group btn-view-case cursor-pointer" data-type="${this.currentTab}" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || item.image_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}" data-image="${(item.image_url || '').replace(/"/g, '&quot;')}">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow relative group btn-view-case cursor-pointer" data-type="${this.currentTab}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || item.image_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}" data-image="${(item.image_url || '').replace(/"/g, '&quot;')}">
                     <div class="h-32 bg-slate-200 flex items-center justify-center relative" style="${imageStyle}">
                         ${!item.image_url ? '<i class="fa-regular fa-image text-slate-400 text-3xl"></i>' : ''}
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>

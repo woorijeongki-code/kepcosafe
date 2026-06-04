@@ -202,7 +202,7 @@ window.Modules['inspections'] = {
         listEl.innerHTML = data.map(item => {
             const editControls = isAdmin ? `
                 <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-4 top-4">
-                    <button class="btn-edit-insp w-7 h-7 rounded bg-slate-100 text-slate-500 hover:text-cyan-600 hover:bg-cyan-50 flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}">
+                    <button class="btn-edit-insp w-7 h-7 rounded bg-slate-100 text-slate-500 hover:text-cyan-600 hover:bg-cyan-50 flex items-center justify-center transition-colors" data-id="${item.id}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}">
                         <i class="fa-solid fa-pen text-[10px]"></i>
                     </button>
                     <button class="btn-del-insp w-7 h-7 rounded bg-slate-100 text-slate-500 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition-colors" data-id="${item.id}">

@@ -51,6 +51,30 @@ window.Modules['notices'] = {
                 <div id="notice-list" class="flex-1 overflow-y-auto space-y-3 pb-4 px-2">
                     <div class="animate-pulse space-y-3 p-2"><div class="h-20 bg-slate-200 rounded-2xl w-full"></div><div class="h-20 bg-slate-200 rounded-2xl w-full"></div><div class="h-20 bg-slate-200 rounded-2xl w-full"></div></div>
                 </div>
+
+                <!-- 상세 보기 모달 -->
+                <div id="notice-detail-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
+                    <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden transform scale-95 transition-transform flex flex-col max-h-[90vh]" id="notice-detail-modal-content">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fa-regular fa-bell text-primary"></i> <span id="detail-category-badge">안전 공지</span></h3>
+                            <button id="btn-close-detail" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+                        <div class="p-6 overflow-y-auto flex-1">
+                            <h2 class="text-xl font-bold text-slate-800 mb-2" id="detail-title">제목</h2>
+                            <p class="text-xs text-slate-400 mb-6" id="detail-date">2026-06-04</p>
+                            <div class="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed mb-6" id="detail-body">내용</div>
+                            
+                            <div id="detail-attachment" class="hidden border-t border-slate-100 pt-4">
+                                <h4 class="text-xs font-bold text-slate-500 mb-2">첨부자료</h4>
+                                <a href="#" target="_blank" id="detail-link-btn" class="inline-flex items-center gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                                    <i class="fa-solid fa-paperclip"></i> <span id="detail-link-text">첨부파일 확인하기</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     },
@@ -99,6 +123,26 @@ window.Modules['notices'] = {
                 formContainer.classList.add('hidden');
                 btnShowForm.classList.remove('hidden');
             });
+            
+            // 상세 모달 닫기
+            const detailModal = document.getElementById('notice-detail-modal');
+            const detailModalContent = document.getElementById('notice-detail-modal-content');
+            const btnCloseDetail = document.getElementById('btn-close-detail');
+            
+            const closeDetailModal = () => {
+                detailModal.classList.add('opacity-0');
+                detailModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    detailModal.classList.add('hidden');
+                }, 300);
+            };
+            
+            if (btnCloseDetail) btnCloseDetail.addEventListener('click', closeDetailModal);
+            if (detailModal) {
+                detailModal.addEventListener('click', (e) => {
+                    if (e.target === detailModal) closeDetailModal();
+                });
+            }
             
             noticeForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -204,23 +248,20 @@ window.Modules['notices'] = {
             setTimeout(() => {
                 if (this.currentTab === 'notice') {
                     listEl.innerHTML = `
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-3 cursor-pointer hover:bg-slate-50">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-3 cursor-pointer hover:bg-slate-50 btn-view-notice" data-type="notice" data-title="[Mock] 장마철 대비 수해 예방 지침" data-content="관할 구역 내 배수로 정비 및 펌프 사전 점검 요망..." data-date="2026-06-02">
                             <div class="w-10 h-10 shrink-0 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-lg">
                                 <i class="fa-solid fa-thumbtack"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-bold text-sm text-slate-800 truncate mb-1">[Mock] 장마철 대비 수해 예방 지침</h4>
                                 <p class="text-xs text-slate-500 truncate">관할 구역 내 배수로 정비 및 펌프 사전 점검 요망...</p>
-                                <button class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="alert('첨부파일 다운로드 (Mock)')">
-                                    <i class="fa-solid fa-paperclip"></i> 수해예방지침_수정본.pdf
-                                </button>
                                 <span class="text-[10px] text-slate-400 mt-2 block">2026-06-02</span>
                             </div>
                         </div>
                     `;
                 } else {
                     listEl.innerHTML = `
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 btn-view-notice cursor-pointer hover:bg-slate-50" data-type="education" data-title="[Mock] 2분기 협력사 법정 안전보건교육 자료" data-content="구글 드라이브 대용량 공유 링크" data-link="https://drive.google.com/" data-date="2026-06-01">
                             <div class="flex items-start gap-3">
                                 <div class="w-10 h-10 shrink-0 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-lg">
                                     <i class="fa-brands fa-google-drive"></i>
@@ -230,9 +271,6 @@ window.Modules['notices'] = {
                                     <p class="text-[10px] text-slate-400">구글 드라이브 대용량 공유 링크</p>
                                 </div>
                             </div>
-                            <button class="w-full bg-slate-50 hover:bg-slate-100 text-blue-600 text-xs font-bold py-2 rounded-xl transition-colors border border-slate-100" onclick="window.open('https://drive.google.com/', '_blank')">
-                                <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> 자료 열람하기
-                            </button>
                         </div>
                     `;
                 }
@@ -274,7 +312,7 @@ window.Modules['notices'] = {
 
             if (this.currentTab === 'notice') {
                 return `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-3 cursor-pointer hover:bg-slate-50 relative group" onclick="alert('공지 상세 보기 구현 필요')">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-3 cursor-pointer hover:bg-slate-50 relative group btn-view-notice" data-type="notice" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}">
                         ${editControls}
                         <div class="w-10 h-10 shrink-0 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center text-lg">
                             <i class="fa-regular fa-bell"></i>
@@ -283,9 +321,9 @@ window.Modules['notices'] = {
                             <h4 class="font-bold text-sm text-slate-800 truncate mb-1">${item.title}</h4>
                             <p class="text-xs text-slate-500 truncate">${item.content || ''}</p>
                             ${item.file_url ? `
-                            <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
-                                <i class="fa-solid fa-paperclip"></i> 첨부파일 확인
-                            </a>
+                            <div class="mt-2 text-[10px] bg-slate-100 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit border border-slate-200">
+                                <i class="fa-solid fa-paperclip"></i> 첨부파일 있음
+                            </div>
                             ` : ''}
                             <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>
                         </div>

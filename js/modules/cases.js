@@ -42,8 +42,37 @@ window.Modules['cases'] = {
                 </div>
                 ` : ''}
 
-                <div id="cases-list" class="flex-1 overflow-y-auto pb-4">
-                    <div class="animate-pulse space-y-3 p-2"><div class="h-20 bg-slate-200 rounded-2xl w-full"></div><div class="h-20 bg-slate-200 rounded-2xl w-full"></div></div>
+                <div id="case-list" class="flex-1 overflow-y-auto space-y-4 pb-4 px-2">
+                    <div class="animate-pulse space-y-3 p-2"><div class="h-32 bg-slate-200 rounded-2xl w-full"></div><div class="h-32 bg-slate-200 rounded-2xl w-full"></div></div>
+                </div>
+
+                <!-- 상세 보기 모달 -->
+                <div id="case-detail-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
+                    <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden transform scale-95 transition-transform flex flex-col max-h-[90vh]" id="case-detail-modal-content">
+                        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2" id="c-detail-badge-container">
+                                <span id="c-detail-category-badge" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">우수</span>
+                            </h3>
+                            <button id="btn-close-case-detail" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+                        <div class="p-6 overflow-y-auto flex-1">
+                            <div id="c-detail-image-container" class="mb-4 rounded-xl overflow-hidden bg-slate-100 hidden">
+                                <img id="c-detail-image" src="" alt="사례 이미지" class="w-full h-auto object-contain max-h-64">
+                            </div>
+                            <h2 class="text-xl font-bold text-slate-800 mb-2" id="c-detail-title">제목</h2>
+                            <p class="text-xs text-slate-400 mb-6" id="c-detail-date">2026-06-04</p>
+                            <div class="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed mb-6" id="c-detail-body">내용</div>
+                            
+                            <div id="c-detail-attachment" class="hidden border-t border-slate-100 pt-4">
+                                <h4 class="text-xs font-bold text-slate-500 mb-2">첨부자료</h4>
+                                <a href="#" target="_blank" id="c-detail-link-btn" class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-bold transition-colors border border-slate-200">
+                                    <i class="fa-solid fa-paperclip"></i> <span>원본 파일 보기</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -95,6 +124,26 @@ window.Modules['cases'] = {
                 btnShowForm.classList.remove('hidden');
             });
             
+            // 상세 모달 닫기
+            const detailModal = document.getElementById('case-detail-modal');
+            const detailModalContent = document.getElementById('case-detail-modal-content');
+            const btnCloseDetail = document.getElementById('btn-close-case-detail');
+            
+            const closeDetailModal = () => {
+                detailModal.classList.add('opacity-0');
+                detailModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    detailModal.classList.add('hidden');
+                }, 300);
+            };
+            
+            if (btnCloseDetail) btnCloseDetail.addEventListener('click', closeDetailModal);
+            if (detailModal) {
+                detailModal.addEventListener('click', (e) => {
+                    if (e.target === detailModal) closeDetailModal();
+                });
+            }
+
             caseForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('c-id').value;
@@ -260,26 +309,78 @@ window.Modules['cases'] = {
             ` : '';
 
             return `
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow relative group">
-                    <div class="h-32 bg-slate-200 flex items-center justify-center relative cursor-pointer" style="${imageStyle}" onclick="alert('사례 상세 보기 및 이미지 슬라이드 기능 구현 필요')">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow relative group btn-view-case cursor-pointer" data-type="${this.currentTab}" data-title="${item.title.replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || item.image_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}" data-image="${(item.image_url || '').replace(/"/g, '&quot;')}">
+                    <div class="h-32 bg-slate-200 flex items-center justify-center relative" style="${imageStyle}">
                         ${!item.image_url ? '<i class="fa-regular fa-image text-slate-400 text-3xl"></i>' : ''}
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                         <span class="absolute bottom-2 right-2 ${badgeColor} text-white text-[10px] font-bold px-2 py-1 rounded">${badgeLabel}</span>
                     </div>
                     ${editControls}
-                    <div class="p-4 cursor-pointer" onclick="alert('사례 상세 보기 및 이미지 슬라이드 기능 구현 필요')">
+                    <div class="p-4">
                         <h4 class="font-bold text-sm text-slate-800 mb-1">${item.title}</h4>
                         <p class="text-xs text-slate-500 line-clamp-2">${item.content}</p>
-                        ${item.file_url ? `
-                        <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
-                            <i class="fa-solid fa-paperclip"></i> 첨부파일 확인
-                        </a>
+                        ${(item.file_url || item.image_url) ? `
+                        <div class="mt-2 text-[10px] bg-slate-100 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit border border-slate-200">
+                            <i class="fa-solid fa-paperclip"></i> 첨부자료 있음
+                        </div>
                         ` : ''}
                         <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>
                     </div>
                 </div>
             `;
         }).join('') + `</div>`;
+
+        // 상세 보기 이벤트
+        listEl.querySelectorAll('.btn-view-case').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.getAttribute('data-type');
+                const title = btn.getAttribute('data-title');
+                const content = btn.getAttribute('data-content');
+                const date = btn.getAttribute('data-date');
+                const fileUrl = btn.getAttribute('data-file');
+                const imageUrl = btn.getAttribute('data-image');
+                
+                const badgeContainer = document.getElementById('c-detail-badge-container');
+                if (type === 'accident') {
+                    badgeContainer.innerHTML = '<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">사고</span> <span class="text-sm">사고사례</span>';
+                } else {
+                    badgeContainer.innerHTML = '<span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">우수</span> <span class="text-sm">우수사례</span>';
+                }
+                
+                document.getElementById('c-detail-title').textContent = title;
+                document.getElementById('c-detail-date').textContent = new Date(date).toLocaleString();
+                document.getElementById('c-detail-body').textContent = content;
+                
+                const imgContainer = document.getElementById('c-detail-image-container');
+                const imgEl = document.getElementById('c-detail-image');
+                if (imageUrl) {
+                    imgEl.src = imageUrl;
+                    imgContainer.classList.remove('hidden');
+                } else {
+                    imgContainer.classList.add('hidden');
+                    imgEl.src = '';
+                }
+                
+                const attachContainer = document.getElementById('c-detail-attachment');
+                const linkBtn = document.getElementById('c-detail-link-btn');
+                
+                if (fileUrl) {
+                    attachContainer.classList.remove('hidden');
+                    linkBtn.href = fileUrl;
+                } else {
+                    attachContainer.classList.add('hidden');
+                }
+                
+                const modal = document.getElementById('case-detail-modal');
+                const modalContent = document.getElementById('case-detail-modal-content');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
+            });
+        });
 
         // 이벤트 위임
         if (isAdmin || AppState.user) {

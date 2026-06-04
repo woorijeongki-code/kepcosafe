@@ -229,19 +229,17 @@ window.Modules['cases'] = {
                 if (this.currentTab === 'accident') {
                     listEl.innerHTML = `
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow" onclick="alert('사례 상세 보기')">
-                                <div class="h-32 bg-slate-200 flex items-center justify-center relative">
-                                    <i class="fa-regular fa-image text-slate-400 text-3xl"></i>
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                                    <span class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">추락사고</span>
-                                </div>
-                                <div class="p-4">
-                                    <h4 class="font-bold text-sm text-slate-800 mb-1">[Mock] A지사 전주 교체 중 추락 발생</h4>
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow relative" onclick="alert('사례 상세 보기')">
+                                <div class="p-5">
+                                    <div class="flex items-start gap-2 mb-2">
+                                        <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">사고</span>
+                                        <h4 class="font-bold text-sm text-slate-800 leading-tight">[Mock] A지사 전주 교체 중 추락 발생</h4>
+                                    </div>
                                     <p class="text-xs text-slate-500 line-clamp-2">안전대 미체결 상태에서 작업 위치 이동 중 발판 미끄러짐으로 인한 추락 사고 발생...</p>
-                                    <button class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 (Mock)')">
-                                        <i class="fa-solid fa-paperclip"></i> 사고현장_사진.jpg
+                                    <button class="mt-3 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 px-3 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 (Mock)')">
+                                        <i class="fa-solid fa-paperclip"></i> 첨부자료 있음
                                     </button>
-                                    <span class="text-[10px] text-slate-400 mt-2 block">2026-05-15</span>
+                                    <span class="text-[10px] text-slate-400 mt-3 block">2026-05-15</span>
                                 </div>
                             </div>
                         </div>
@@ -249,15 +247,14 @@ window.Modules['cases'] = {
                 } else {
                     listEl.innerHTML = `
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
-                                <div class="h-32 bg-slate-200 flex items-center justify-center relative">
-                                    <i class="fa-regular fa-image text-slate-400 text-3xl"></i>
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                                    <span class="absolute bottom-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">장비개선</span>
-                                </div>
-                                <div class="p-4">
-                                    <h4 class="font-bold text-sm text-slate-800 mb-1">[Mock] 자체 고안 스마트 안전고리 도입</h4>
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow relative">
+                                <div class="p-5">
+                                    <div class="flex items-start gap-2 mb-2">
+                                        <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">우수</span>
+                                        <h4 class="font-bold text-sm text-slate-800 leading-tight">[Mock] 자체 고안 스마트 안전고리 도입</h4>
+                                    </div>
                                     <p class="text-xs text-slate-500 line-clamp-2">체결 여부를 LED와 소리로 알려주는 스마트 안전고리를 도입하여 근로자 만족도 및 안전성 향상...</p>
+                                    <span class="text-[10px] text-slate-400 mt-3 block">2026-05-15</span>
                                 </div>
                             </div>
                         </div>
@@ -310,21 +307,19 @@ window.Modules['cases'] = {
 
             return `
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow relative group btn-view-case cursor-pointer" data-type="${this.currentTab}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-content="${(item.content || '').replace(/"/g, '&quot;')}" data-file="${(item.file_url || item.image_url || '').replace(/"/g, '&quot;')}" data-date="${item.created_at}" data-image="${(item.image_url || '').replace(/"/g, '&quot;')}">
-                    <div class="h-32 bg-slate-200 flex items-center justify-center relative" style="${imageStyle}">
-                        ${!item.image_url ? '<i class="fa-regular fa-image text-slate-400 text-3xl"></i>' : ''}
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                        <span class="absolute bottom-2 right-2 ${badgeColor} text-white text-[10px] font-bold px-2 py-1 rounded">${badgeLabel}</span>
-                    </div>
                     ${editControls}
-                    <div class="p-4">
-                        <h4 class="font-bold text-sm text-slate-800 mb-1">${item.title}</h4>
+                    <div class="p-5">
+                        <div class="flex items-start gap-2 mb-2 pr-12">
+                            <span class="${badgeColor} text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">${badgeLabel}</span>
+                            <h4 class="font-bold text-sm text-slate-800 leading-tight">${item.title}</h4>
+                        </div>
                         <p class="text-xs text-slate-500 line-clamp-2">${item.content}</p>
                         ${(item.file_url || item.image_url) ? `
-                        <div class="mt-2 text-[10px] bg-slate-100 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit border border-slate-200">
+                        <div class="mt-3 text-[10px] bg-slate-100 text-slate-600 py-1.5 px-3 rounded-lg flex items-center gap-1 w-fit border border-slate-200">
                             <i class="fa-solid fa-paperclip"></i> 첨부자료 있음
                         </div>
                         ` : ''}
-                        <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>
+                        <span class="text-[10px] text-slate-400 mt-3 block">${new Date(item.created_at).toLocaleDateString()}</span>
                     </div>
                 </div>
             `;

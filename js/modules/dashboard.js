@@ -53,8 +53,8 @@ window.Modules['dashboard'] = {
                         </div>
                         <div>
                             <p class="text-[11px] font-bold text-slate-500">플랫폼 가입 현황</p>
-                            <p class="text-xl font-black text-slate-800 mt-0.5"><span id="stat-user-count">0</span> <span class="text-sm font-medium text-slate-500">명</span></p>
-                            <p class="text-[9px] text-slate-400 mt-0.5">총 가입자 수</p>
+                            <p class="text-xl font-black text-slate-800 mt-0.5"><span id="stat-user-count">0</span> <span class="text-sm font-medium text-slate-500">개사</span></p>
+                            <p class="text-[9px] text-slate-400 mt-0.5">총 가입 협력사 수</p>
                         </div>
                     </div>
                 </div>

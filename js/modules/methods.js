@@ -38,7 +38,11 @@ window.Modules['methods'] = {
                             <input type="text" id="m-title" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-teal-500 focus:border-teal-500 text-sm" placeholder="예: 무정전 배전설비 교체 공법">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">공법 내용 및 설명</label>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">외부 링크 (유튜브/드라이브 등)</label>
+                            <input type="url" id="m-link" class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-teal-500 focus:border-teal-500 text-sm" placeholder="https://...">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">상세 내용</label>
                             <textarea id="m-content" rows="4" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-teal-500 focus:border-teal-500 text-sm" placeholder="상세 내용을 입력하세요"></textarea>
                         </div>
                         <div>
@@ -88,6 +92,7 @@ window.Modules['methods'] = {
                 e.preventDefault();
                 const id = document.getElementById('m-id').value;
                 const title = document.getElementById('m-title').value;
+                const link = document.getElementById('m-link').value;
                 const content = document.getElementById('m-content').value;
                 const fileInput = document.getElementById('m-file');
                 const hasFile = fileInput && fileInput.files.length > 0;
@@ -130,6 +135,7 @@ window.Modules['methods'] = {
                     const res = await AppState.supabase.from('methods').update({
                         title: title,
                         content: content,
+                        drive_link: link || null,
                         ...(hasFile && { file_url: fileUrl })
                     }).eq('id', id);
                     error = res.error;
@@ -137,6 +143,7 @@ window.Modules['methods'] = {
                     const res = await AppState.supabase.from('methods').insert([{
                         title: title,
                         content: content,
+                        drive_link: link || null,
                         file_url: fileUrl
                     }]);
                     error = res.error;
@@ -242,6 +249,9 @@ window.Modules['methods'] = {
                     document.getElementById('m-id').value = btn.dataset.id;
                     document.getElementById('m-title').value = btn.dataset.title;
                     document.getElementById('m-content').value = btn.dataset.content;
+                    
+                    const linkInput = document.getElementById('m-link');
+                    if(linkInput) linkInput.value = btn.dataset.link || '';
                     
                     document.getElementById('method-form-title').textContent = '작업공법 수정';
                     document.getElementById('m-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> 수정 완료';

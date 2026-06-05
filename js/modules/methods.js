@@ -228,9 +228,14 @@ window.Modules['methods'] = {
                     <div class="flex-1 min-w-0 pr-12">
                         <h4 class="font-bold text-slate-800 mb-1">${item.title}</h4>
                         <p class="text-xs text-slate-500 whitespace-pre-wrap">${item.content || ''}</p>
+                        ${item.drive_link ? `
+                        <a href="${item.drive_link}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[11px] bg-indigo-50 hover:bg-indigo-100 text-indigo-600 py-1.5 px-3 rounded-lg flex items-center gap-1.5 transition-colors font-medium border border-indigo-100 w-fit" onclick="event.stopPropagation();">
+                            <i class="fa-solid fa-link"></i> 외부 링크 열기
+                        </a>
+                        ` : ''}
                         ${item.file_url ? `
                         <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
-                            <i class="fa-solid fa-paperclip"></i> 첨부자료 확인
+                            <i class="fa-solid fa-paperclip"></i> 첨부자료 다운로드
                         </a>
                         ` : ''}
                         <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>

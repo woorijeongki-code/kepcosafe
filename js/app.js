@@ -17,7 +17,7 @@ HTMLFormElement.prototype.reset = function() {
     const inputs = this.querySelectorAll('input:not([type="file"]):not([type="password"]):not([type="hidden"]), textarea');
     inputs.forEach(input => {
         if (input.id && window.AppRouter && window.AppRouter.currentModule) {
-            sessionStorage.removeItem(`draft_${window.AppRouter.currentModule}_${input.id}`);
+            localStorage.removeItem(`draft_${window.AppRouter.currentModule}_${input.id}`);
         }
     });
     originalReset.apply(this);
@@ -86,14 +86,14 @@ window.AppRouter = {
             const draftKey = `draft_${this.currentModule}_${input.id}`;
             
             // 1. 임시저장된 값 복원
-            const savedValue = sessionStorage.getItem(draftKey);
+            const savedValue = localStorage.getItem(draftKey);
             if (savedValue !== null) {
                 input.value = savedValue;
             }
             
             // 2. 입력 시 실시간 임시저장
             input.addEventListener('input', (e) => {
-                sessionStorage.setItem(draftKey, e.target.value);
+                localStorage.setItem(draftKey, e.target.value);
             });
         });
     },

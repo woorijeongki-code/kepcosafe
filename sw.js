@@ -23,7 +23,8 @@ self.addEventListener('fetch', (e) => {
     const url = new URL(e.request.url);
     url.searchParams.set('nocache', Date.now());
     e.respondWith(fetch(url.toString(), { cache: 'no-store' }));
-  } else {
-    e.respondWith(fetch(e.request));
   }
+  // GET 외의 요청(POST, Supabase API 등)은 서비스 워커가 개입하지 않고 
+  // 브라우저가 직접 네트워크로 처리하도록 둡니다. 
+  // (모바일 크롬 등에서 FormData/POST 전송 실패 버그 방지)
 });

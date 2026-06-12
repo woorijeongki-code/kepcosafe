@@ -11,16 +11,32 @@
 
 window.Modules = {}; // 각 기능 모듈이 자신을 등록할 객체
 
-// 전역 폼 리셋 오버라이드: 폼 초기화 시 임시저장 데이터도 함께 삭제
+// 전역 폼 리셋 오버라이드: 제출 성공(보이는 상태) 시에만 임시저장 삭제, 열기(숨긴 상태) 시에는 복구
 const originalReset = HTMLFormElement.prototype.reset;
 HTMLFormElement.prototype.reset = function() {
-    const inputs = this.querySelectorAll('input:not([type="file"]):not([type="password"]):not([type="hidden"]), textarea');
-    inputs.forEach(input => {
-        if (input.id && window.AppRouter && window.AppRouter.currentModule) {
-            localStorage.removeItem(`draft_${window.AppRouter.currentModule}_${input.id}`);
-        }
-    });
+    // 폼이 화면에 표시되어 있는지 확인 (성공적으로 제출된 직후에는 보임)
+    const isHidden = this.offsetParent === null || window.getComputedStyle(this).display === 'none' || this.closest('.hidden') !== null;
+    
+    if (!isHidden) {
+        // 성공적인 제출 후 리셋: 임시저장 데이터 영구 삭제
+        const inputs = this.querySelectorAll('input:not([type="file"]):not([type="password"]):not([type="hidden"]), textarea');
+        inputs.forEach(input => {
+            if (input.id && window.AppRouter && window.AppRouter.currentModule) {
+                localStorage.removeItem(`draft_${window.AppRouter.currentModule}_${input.id}`);
+            }
+        });
+    }
+    
     originalReset.apply(this);
+
+    // 만약 폼을 열기 위해 리셋된 것이라면 (숨겨진 상태에서 리셋), 지워진 텍스트를 즉시 복구
+    if (isHidden) {
+        setTimeout(() => {
+            if (window.AppRouter && window.AppRouter.setupAutoSave) {
+                window.AppRouter.setupAutoSave();
+            }
+        }, 10);
+    }
 };
 
 window.AppRouter = {

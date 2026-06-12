@@ -1,40 +1,40 @@
 window.Modules['feedback'] = {
-    title: '?�드�??�출',
+    title: '피드백 제출',
     
     render() {
         const isAdmin = AppState.profile && AppState.profile.role === 'admin';
         
         let html = `
             <div class="space-y-6 fade-in h-full flex flex-col">
-                <!-- ??메뉴 -->
+                <!-- 탭 메뉴 -->
                 <div class="flex border-b border-slate-200 mb-2">
-                    <button class="flex-1 py-3 text-sm font-bold text-primary border-b-2 border-primary" id="tab-meeting">무정?�회?�록 ?�드�?/button>
-                    <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors" id="tab-edu">교육?�료 ?�드�?/button>
+                    <button class="flex-1 py-3 text-sm font-bold text-primary border-b-2 border-primary" id="tab-meeting">무정전회의록 피드백</button>
+                    <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors" id="tab-edu">교육자료 피드백</button>
                 </div>
                 
                 <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4">
-                    <p class="text-sm text-blue-800" id="feedback-desc">무정??공법 관???�의록을 ?�인?�고, ?�장 ?�견?�나 보완 ?�항???�출??주세?? (관리자가 ?�린 ?�의록에???�명???�길 ???�습?�다.)</p>
+                    <p class="text-sm text-blue-800" id="feedback-desc">무정전 공법 관련 회의록을 확인하고, 현장 의견이나 보완 사항을 제출해 주세요. (관리자가 올린 회의록에는 서명을 남길 수 있습니다.)</p>
                 </div>
 
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-                    <h4 class="font-bold text-slate-800 mb-4" id="form-title">${isAdmin ? '?�의�?/ ?�료 ?�로?? : '?�견 ?�출?�기'}</h4>
+                    <h4 class="font-bold text-slate-800 mb-4" id="form-title">${isAdmin ? '회의록 / 자료 업로드' : '의견 제출하기'}</h4>
                     <form id="feedback-form" class="space-y-4">
                         <input type="hidden" id="fb-id" value="">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">?�목</label>
-                            <input type="text" id="fb-title" required class="block w-full p-3 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="?? 6???�전교육 ?�수 �?건의?�항">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">제목</label>
+                            <input type="text" id="fb-title" required class="block w-full p-3 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="예: 6월 안전교육 이수 및 건의사항">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">?�세 ?�용</label>
-                            <textarea id="fb-content" rows="4" required class="block w-full p-3 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="${isAdmin ? '?�의�??�용???�약?�여 ?�성??주세??' : '?�견???�유�?�� ?�어주세??'}"></textarea>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">상세 내용</label>
+                            <textarea id="fb-content" rows="4" required class="block w-full p-3 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="${isAdmin ? '회의록 내용을 요약하여 작성해 주세요.' : '의견을 자유롭게 적어주세요.'}"></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">붙임 (첨�??�일)</label>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">붙임 (첨부파일)</label>
                             <input type="file" id="fb-file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer border border-slate-200 rounded-xl p-1">
                         </div>
                         <div class="flex gap-2">
                             <button type="submit" class="flex-1 bg-primary hover:bg-blue-800 text-white font-bold py-3 rounded-xl shadow-md transition-colors" id="fb-submit-btn">
-                                <i class="fa-solid fa-paper-plane mr-1"></i> ${isAdmin ? '?�로?�하�? : '?�출?�기'}
+                                <i class="fa-solid fa-paper-plane mr-1"></i> ${isAdmin ? '업로드하기' : '제출하기'}
                             </button>
                             <button type="button" id="btn-fb-cancel-edit" class="hidden flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl shadow-sm transition-colors">
                                 취소
@@ -44,28 +44,28 @@ window.Modules['feedback'] = {
                 </div>
 
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex-1 relative">
-                    <h4 class="font-bold text-slate-800 mb-4" id="list-title">?�역 �??�명 ?�황</h4>
+                    <h4 class="font-bold text-slate-800 mb-4" id="list-title">내역 및 서명 현황</h4>
                     <div id="feedback-list" class="space-y-4 pb-4 h-[400px] overflow-y-auto pr-2">
                         <div class="animate-pulse space-y-3 p-2"><div class="h-20 bg-slate-200 rounded-2xl w-full"></div><div class="h-20 bg-slate-200 rounded-2xl w-full"></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ?�명 모달 -->
+            <!-- 서명 모달 -->
             <div id="signature-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
                 <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl overflow-hidden transform scale-95 transition-transform flex flex-col">
                     <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
-                        <h3 class="font-bold text-slate-800">?�의�??�명</h3>
+                        <h3 class="font-bold text-slate-800">회의록 서명</h3>
                         <button id="btn-close-sig" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
                             <i class="fa-solid fa-xmark text-lg"></i>
                         </button>
                     </div>
                     <div class="p-4 flex flex-col items-center">
-                        <p class="text-xs text-slate-500 mb-2">?�래 ?�모 �??�에 ?�명???�자�?그려주세??</p>
+                        <p class="text-xs text-slate-500 mb-2">아래 네모 칸 안에 서명을 정자로 그려주세요.</p>
                         <canvas id="signature-pad" width="300" height="150" class="border-2 border-slate-200 rounded-xl bg-slate-50 touch-none mb-3"></canvas>
                         <div class="flex w-full gap-2">
-                            <button id="btn-clear-sig" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-sm transition-colors">지?�기</button>
-                            <button id="btn-save-sig" class="w-2/3 bg-primary hover:bg-blue-800 text-white font-bold py-2 rounded-xl text-sm transition-colors shadow-md">?�명 ?�료</button>
+                            <button id="btn-clear-sig" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-sm transition-colors">지우기</button>
+                            <button id="btn-save-sig" class="w-2/3 bg-primary hover:bg-blue-800 text-white font-bold py-2 rounded-xl text-sm transition-colors shadow-md">서명 완료</button>
                         </div>
                     </div>
                 </div>
@@ -85,7 +85,7 @@ window.Modules['feedback'] = {
         if (btnCancelEdit) {
             btnCancelEdit.addEventListener('click', () => {
                 document.getElementById('fb-id').value = '';
-                document.getElementById('fb-submit-btn').innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> ${AppState.profile && AppState.profile.role === 'admin' ? '?�로?�하�? : '?�출?�기'}`;
+                document.getElementById('fb-submit-btn').innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i> ${AppState.profile && AppState.profile.role === 'admin' ? '업로드하기' : '제출하기'}`;
                 form.reset();
                 btnCancelEdit.classList.add('hidden');
             });
@@ -105,15 +105,15 @@ window.Modules['feedback'] = {
                 if (!title.trim() || !content.trim()) return;
 
                 if (!AppState.supabase) {
-                    alert('[Mock] ?�드백이 ' + (id ? '?�정' : '?�출') + '?�었?�니??' + (hasFile ? '\\n(첨�??�일: ' + fileInput.files[0].name + ')' : ''));
+                    alert('[Mock] 피드백이 ' + (id ? '수정' : '제출') + '되었습니다.' + (hasFile ? '\\n(첨부파일: ' + fileInput.files[0].name + ')' : ''));
                     form.reset();
                     if(btnCancelEdit) btnCancelEdit.classList.add('hidden');
-                    document.getElementById('fb-submit-btn').innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ?�출?�기';
+                    document.getElementById('fb-submit-btn').innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> 제출하기';
                     this.loadFeedback();
                     return;
                 }
 
-                // ?�제 ?�일 ?�로??로직
+                // 실제 파일 업로드 로직
                 let fileUrl = null;
                 if (hasFile) {
                     const file = fileInput.files[0];
@@ -125,7 +125,7 @@ window.Modules['feedback'] = {
                         .upload(fileName, new Blob([await file.arrayBuffer()], {type: file.type || 'application/pdf'}), { contentType: file.type || 'application/pdf' });
                         
                     if (uploadError) {
-                        alert('?�일 ?�로???�패: ' + uploadError.message);
+                        alert('파일 업로드 실패: ' + uploadError.message);
                         showLoading(false);
                         return;
                     }
@@ -159,13 +159,13 @@ window.Modules['feedback'] = {
                 
                 showLoading(false);
                 if (error) {
-                    alert('처리 ?�패: ' + error.message);
+                    alert('처리 실패: ' + error.message);
                 } else {
-                    alert(id ? '?�정?�었?�니??' : '?�공?�으�??�출?�었?�니??');
+                    alert(id ? '수정되었습니다.' : '성공적으로 제출되었습니다.');
                     form.reset();
                     document.getElementById('fb-id').value = '';
                     if(btnCancelEdit) btnCancelEdit.classList.add('hidden');
-                    document.getElementById('fb-submit-btn').innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ?�출?�기';
+                    document.getElementById('fb-submit-btn').innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> 제출하기';
                     this.loadFeedback();
                 }
             });
@@ -181,7 +181,7 @@ window.Modules['feedback'] = {
                 this.currentTab = 'meeting';
                 tabMeeting.className = "flex-1 py-3 text-sm font-bold text-primary border-b-2 border-primary transition-all";
                 tabEdu.className = "flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-all";
-                if(descEl) descEl.textContent = "무정??공법 관???�의록을 ?�인?�고, ?�장 ?�견?�나 보완 ?�항???�출??주세??";
+                if(descEl) descEl.textContent = "무정전 공법 관련 회의록을 확인하고, 현장 의견이나 보완 사항을 제출해 주세요.";
                 this.loadFeedback();
             });
 
@@ -189,7 +189,7 @@ window.Modules['feedback'] = {
                 this.currentTab = 'edu';
                 tabEdu.className = "flex-1 py-3 text-sm font-bold text-primary border-b-2 border-primary transition-all";
                 tabMeeting.className = "flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-all";
-                if(descEl) descEl.textContent = "?�전 교육?�료�??�람?�신 ???�수 ?�인 �?교육???�???�드백을 ?�겨 주세??";
+                if(descEl) descEl.textContent = "안전 교육자료를 열람하신 후 이수 확인 및 교육에 대한 피드백을 남겨 주세요.";
                 this.loadFeedback();
             });
         }
@@ -204,15 +204,15 @@ window.Modules['feedback'] = {
                 listEl.innerHTML = `
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex gap-4">
                         <div class="w-10 h-10 shrink-0 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg font-bold">
-                            ?�
+                            대
                         </div>
                         <div class="flex-1">
-                            <h5 class="font-bold text-sm text-slate-800 mb-1">[Mock] ${this.currentTab === 'meeting' ? '무정???�업 ???�전고리 체결 건의' : '6???�기 ?�전교육 ?�수 ?�료 �?건의'}</h5>
-                            <p class="text-xs text-slate-600 leading-relaxed mb-2">?�장 ?�견?�니?? ??부?�드립니??</p>
-                            <button class="mb-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨�??�일 ?�운로드 (Mock)')">
-                                <i class="fa-solid fa-paperclip"></i> 증빙?�료.pdf
+                            <h5 class="font-bold text-sm text-slate-800 mb-1">[Mock] ${this.currentTab === 'meeting' ? '무정전 작업 시 안전고리 체결 건의' : '6월 정기 안전교육 이수 완료 및 건의'}</h5>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-2">현장 의견입니다. 잘 부탁드립니다.</p>
+                            <button class="mb-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 (Mock)')">
+                                <i class="fa-solid fa-paperclip"></i> 증빙자료.pdf
                             </button>
-                            <p class="text-[10px] text-slate-400">?�?�전�?�? · 2026-06-02</p>
+                            <p class="text-[10px] text-slate-400">대덕전기(주) · 2026-06-02</p>
                         </div>
                     </div>
                 `;
@@ -232,24 +232,24 @@ window.Modules['feedback'] = {
         let filteredData = data;
         
         if (!isAdmin) {
-            // ?�력?�는 본인????글?�거?? 관리자가 ?�린 글(?�의�?�?�????�음
+            // 협력사는 본인이 쓴 글이거나, 관리자가 올린 글(회의록)만 볼 수 있음
             filteredData = data?.filter(item => item.author_id === AppState.user.id || item.users?.role === 'admin') || [];
         }
 
         if (error) {
-            listEl.innerHTML = `<p class="text-center text-sm text-red-500 py-4">목록 로드 ?�패</p>`;
+            listEl.innerHTML = `<p class="text-center text-sm text-red-500 py-4">목록 로드 실패</p>`;
             return;
         }
 
         if (filteredData.length === 0) {
-            listEl.innerHTML = `<p class="text-center text-sm text-slate-500 py-8">?�록???�역???�습?�다.</p>`;
+            listEl.innerHTML = `<p class="text-center text-sm text-slate-500 py-8">등록된 내역이 없습니다.</p>`;
             return;
         }
 
         listEl.innerHTML = filteredData.map(item => {
             const isWriterAdmin = item.users?.role === 'admin';
-            const companyName = isWriterAdmin ? '?�국?�력공사' : (item.users?.company_name || '?�력?�사');
-            const firstLetter = isWriterAdmin ? '?? : companyName.charAt(0);
+            const companyName = isWriterAdmin ? '한국전력공사' : (item.users?.company_name || '협력회사');
+            const firstLetter = isWriterAdmin ? '한' : companyName.charAt(0);
             const badgeClass = isWriterAdmin ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600';
             
             const isAuthor = AppState.user && item.author_id === AppState.user.id;
@@ -259,13 +259,13 @@ window.Modules['feedback'] = {
             
             let sigHtml = '';
             if (isWriterAdmin) {
-                // 관리자가 ???�의록의 경우, ?�명 관??UI ?�시
+                // 관리자가 쓴 회의록의 경우, 서명 관련 UI 표시
                 if (isAdmin) {
-                    // 관리자 ?�면: ?�명???�력??목록�??�명 ?��?지 ?�시
+                    // 관리자 화면: 서명한 협력사 목록과 서명 이미지 표시
                     if (signatures.length > 0) {
                         sigHtml = `
                             <div class="mt-3 pt-3 border-t border-slate-100">
-                                <p class="text-[10px] font-bold text-slate-500 mb-2">?�명 ?�료 ?�황 (${signatures.length}개사)</p>
+                                <p class="text-[10px] font-bold text-slate-500 mb-2">서명 완료 현황 (${signatures.length}개사)</p>
                                 <div class="flex flex-wrap gap-2">
                                     ${signatures.map(sig => `
                                         <div class="bg-slate-50 border border-slate-200 rounded-lg p-2 text-center w-20">
@@ -277,21 +277,21 @@ window.Modules['feedback'] = {
                             </div>
                         `;
                     } else {
-                        sigHtml = `<div class="mt-3 pt-3 border-t border-slate-100"><p class="text-[10px] text-slate-400">?�직 ?�명???�력?��? ?�습?�다.</p></div>`;
+                        sigHtml = `<div class="mt-3 pt-3 border-t border-slate-100"><p class="text-[10px] text-slate-400">아직 서명한 협력사가 없습니다.</p></div>`;
                     }
                 } else {
-                    // ?�력???�면: ?�명?�기 버튼 ?�는 ?�료 배�? ?�시
+                    // 협력사 화면: 서명하기 버튼 또는 완료 배지 표시
                     if (hasSigned) {
                         sigHtml = `
                             <div class="mt-3 pt-3 border-t border-slate-100 flex justify-end">
-                                <span class="bg-green-100 text-green-700 text-xs font-bold py-1 px-3 rounded-lg"><i class="fa-solid fa-check mr-1"></i> ?�명 ?�료</span>
+                                <span class="bg-green-100 text-green-700 text-xs font-bold py-1 px-3 rounded-lg"><i class="fa-solid fa-check mr-1"></i> 서명 완료</span>
                             </div>
                         `;
                     } else {
                         sigHtml = `
                             <div class="mt-3 pt-3 border-t border-slate-100 flex justify-end">
                                 <button class="btn-open-sig bg-primary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md hover:bg-blue-800 transition-colors" data-id="${item.id}">
-                                    <i class="fa-solid fa-pen-nib mr-1"></i> ?�명?�기
+                                    <i class="fa-solid fa-pen-nib mr-1"></i> 서명하기
                                 </button>
                             </div>
                         `;
@@ -324,7 +324,7 @@ window.Modules['feedback'] = {
                             <p class="text-xs text-slate-600 leading-relaxed mb-2 whitespace-pre-wrap">${item.content}</p>
                             ${item.file_url ? `
                             <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mb-2 text-[10px] bg-white hover:bg-slate-100 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200">
-                                <i class="fa-solid fa-paperclip"></i> 첨�??�료 보기
+                                <i class="fa-solid fa-paperclip"></i> 첨부자료 보기
                             </a>
                             ` : ''}
                             <p class="text-[10px] text-slate-400">${companyName} · ${new Date(item.created_at).toLocaleDateString()}</p>
@@ -335,14 +335,14 @@ window.Modules['feedback'] = {
             `;
         }).join('');
 
-        // ?�벤???�임
+        // 이벤트 위임
         listEl.querySelectorAll('.btn-edit-fb').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.getElementById('fb-id').value = btn.dataset.id;
                 document.getElementById('fb-title').value = btn.dataset.title;
                 document.getElementById('fb-content').value = btn.dataset.content;
-                document.getElementById('fb-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> ?�정 ?�료';
+                document.getElementById('fb-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> 수정 완료';
                 document.getElementById('btn-fb-cancel-edit').classList.remove('hidden');
                 document.getElementById('form-title').scrollIntoView({ behavior: 'smooth' });
             });
@@ -351,15 +351,15 @@ window.Modules['feedback'] = {
         listEl.querySelectorAll('.btn-del-fb').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
-                if (confirm('?�말 ??��?�시겠습?�까?')) {
+                if (confirm('정말 삭제하시겠습니까?')) {
                     if (!AppState.supabase) {
-                        alert('[Mock] ??��?�었?�니??');
+                        alert('[Mock] 삭제되었습니다.');
                         return;
                     }
                     showLoading(true);
                     const { error } = await AppState.supabase.from('feedback').delete().eq('id', btn.dataset.id);
                     showLoading(false);
-                    if (error) alert('??�� ?�패: ' + error.message);
+                    if (error) alert('삭제 실패: ' + error.message);
                     else this.loadFeedback();
                 }
             });
@@ -386,7 +386,8 @@ window.Modules['feedback'] = {
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
         
-        // 캔버??초기??        ctx.fillStyle = '#f8fafc'; // slate-50
+        // 캔버스 초기화
+        ctx.fillStyle = '#f8fafc'; // slate-50
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         const getPos = (e) => {
@@ -461,13 +462,14 @@ window.Modules['feedback'] = {
             showLoading(true);
             try {
                 if (!AppState.supabase) {
-                    alert('[Mock] ?�명???�?�되?�습?�다.');
+                    alert('[Mock] 서명이 저장되었습니다.');
                     closeModal();
                     this.loadFeedback();
                     return;
                 }
                 
-                // Base64 ?��?지�?Blob?�로 변?�하??Storage???�로??                const res = await fetch(dataUrl);
+                // Base64 이미지를 Blob으로 변환하여 Storage에 업로드
+                const res = await fetch(dataUrl);
                 const blob = await res.blob();
                 const fileName = `sig_${Date.now()}_${Math.random().toString(36).substring(2, 9)}.png`;
                 
@@ -481,7 +483,7 @@ window.Modules['feedback'] = {
                     .from('attachments')
                     .getPublicUrl(`signatures/${fileName}`);
                     
-                // signatures ?�이블에 insert
+                // signatures 테이블에 insert
                 const { error: dbError } = await AppState.supabase.from('signatures').insert([{
                     feedback_id: this.activeFeedbackId,
                     signer_id: AppState.user.id,
@@ -490,16 +492,15 @@ window.Modules['feedback'] = {
                 
                 if (dbError) throw dbError;
                 
-                alert('?�명???�료?�었?�니??');
+                alert('서명이 완료되었습니다.');
                 closeModal();
                 this.loadFeedback();
             } catch (err) {
-                console.error("?�명 ?�???�류:", err);
-                alert("?�명 ?�??�??�류가 발생?�습?�다: " + err.message);
+                console.error("서명 저장 오류:", err);
+                alert("서명 저장 중 오류가 발생했습니다: " + err.message);
             } finally {
                 showLoading(false);
             }
         });
     }
 };
-

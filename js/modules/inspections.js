@@ -1,16 +1,16 @@
 window.Modules['inspections'] = {
-    title: '?�전?��?',
+    title: '안전점검',
     
     render() {
         const isAdmin = AppState.profile && AppState.profile.role === 'admin';
         return `
             <div class="space-y-6 fade-in h-full flex flex-col relative pb-10">
-                <!-- ?�더 ?�역 -->
+                <!-- 헤더 영역 -->
                 <div class="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl p-6 text-white shadow-md relative overflow-hidden mt-2 mx-2">
                     <div class="relative z-10 flex items-center justify-between">
                         <div>
-                            <h2 class="text-xl font-black mb-1">?�일 ?�전?��? 결과</h2>
-                            <p class="text-cyan-50 text-xs font-medium">?�장 ?�전?��? ?�행 결과�??�인?�세??</p>
+                            <h2 class="text-xl font-black mb-1">일일 안전점검 결과</h2>
+                            <p class="text-cyan-50 text-xs font-medium">현장 안전점검 수행 결과를 확인하세요.</p>
                         </div>
                         <div class="text-4xl opacity-20">
                             <i class="fa-solid fa-list-check"></i>
@@ -21,38 +21,38 @@ window.Modules['inspections'] = {
                 ${isAdmin ? `
                 <div class="px-2 mb-2 flex justify-end">
                     <button id="btn-show-insp-form" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all flex items-center gap-1">
-                        <i class="fa-solid fa-pen"></i> ?��?결과 ?�록
+                        <i class="fa-solid fa-pen"></i> 점검결과 등록
                     </button>
                 </div>
                 
-                <!-- ?�록 ??(기본 ?��?) -->
+                <!-- 등록 폼 (기본 숨김) -->
                 <div id="insp-form-container" class="hidden bg-white rounded-2xl p-4 shadow-sm border border-slate-200 mx-2 mb-4 fade-in relative">
                     <button id="btn-close-insp-form" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
-                    <h4 class="font-bold text-slate-800 mb-4" id="insp-form-title">?�전?��? 결과 ?�록</h4>
+                    <h4 class="font-bold text-slate-800 mb-4" id="insp-form-title">안전점검 결과 등록</h4>
                     <form id="insp-form" class="space-y-3">
                         <input type="hidden" id="i-id" value="">
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">?��?결과 ?�목</label>
-                            <input type="text" id="i-title" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-cyan-500 focus:border-cyan-500 text-sm" placeholder="?? [배전] ?�선차량 ?�일 ?�전?��? 결과">
+                            <label class="block text-xs font-medium text-slate-700 mb-1">점검결과 제목</label>
+                            <input type="text" id="i-title" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-cyan-500 focus:border-cyan-500 text-sm" placeholder="예: [배전] 활선차량 일일 안전점검 결과">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">?��? ?�용</label>
-                            <textarea id="i-content" rows="4" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-cyan-500 focus:border-cyan-500 text-sm" placeholder="?�장 ?�전?��? 결과 ?�세 ?�용???�력?�세??></textarea>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">점검 내용</label>
+                            <textarea id="i-content" rows="4" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-cyan-500 focus:border-cyan-500 text-sm" placeholder="현장 안전점검 결과 상세 내용을 입력하세요"></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">붙임 (첨�??�일/?�진)</label>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">붙임 (첨부파일/사진)</label>
                             <input type="file" id="i-file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer border border-slate-200 rounded-xl p-1">
                         </div>
                         <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-xl shadow-md transition-colors mt-2 text-sm" id="i-submit-btn">
-                            <i class="fa-solid fa-check mr-1"></i> ?�록 ?�료
+                            <i class="fa-solid fa-check mr-1"></i> 등록 완료
                         </button>
                     </form>
                 </div>
                 ` : ''}
 
-                <!-- ?��? 리스???�역 -->
+                <!-- 점검 리스트 영역 -->
                 <div id="insp-list" class="flex-1 overflow-y-auto space-y-3 px-2">
                     <div class="animate-pulse space-y-3 p-2"><div class="h-24 bg-slate-200 rounded-2xl w-full"></div><div class="h-24 bg-slate-200 rounded-2xl w-full"></div></div>
                 </div>
@@ -72,8 +72,8 @@ window.Modules['inspections'] = {
         if (btnShowForm && formContainer) {
             btnShowForm.addEventListener('click', () => {
                 document.getElementById('i-id').value = '';
-                document.getElementById('i-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> ?�록 ?�료';
-                document.getElementById('insp-form-title').textContent = '?�전?��? 결과 ?�록';
+                document.getElementById('i-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> 등록 완료';
+                document.getElementById('insp-form-title').textContent = '안전점검 결과 등록';
                 inspForm.reset();
                 formContainer.classList.remove('hidden');
                 btnShowForm.classList.add('hidden');
@@ -93,7 +93,7 @@ window.Modules['inspections'] = {
                 const hasFile = fileInput && fileInput.files.length > 0;
                 
                 if (!AppState.supabase) {
-                    alert('[Mock] ' + (id ? '?�정' : '?�록') + '?�었?�니??' + (hasFile ? '\\n(첨�??�일: ' + fileInput.files[0].name + ')' : ''));
+                    alert('[Mock] ' + (id ? '수정' : '등록') + '되었습니다.' + (hasFile ? '\\n(첨부파일: ' + fileInput.files[0].name + ')' : ''));
                     inspForm.reset();
                     formContainer.classList.add('hidden');
                     btnShowForm.classList.remove('hidden');
@@ -101,7 +101,7 @@ window.Modules['inspections'] = {
                     return;
                 }
                 
-                // ?�제 ?�일 ?�로??로직
+                // 실제 파일 업로드 로직
                 let fileUrl = null;
                 if (hasFile) {
                     const file = fileInput.files[0];
@@ -113,7 +113,7 @@ window.Modules['inspections'] = {
                         .upload(fileName, new Blob([await file.arrayBuffer()], {type: file.type || 'application/pdf'}), { contentType: file.type || 'application/pdf' });
                         
                     if (uploadError) {
-                        alert('?�일 ?�로???�패: ' + uploadError.message);
+                        alert('파일 업로드 실패: ' + uploadError.message);
                         showLoading(false);
                         return;
                     }
@@ -145,9 +145,9 @@ window.Modules['inspections'] = {
                 
                 showLoading(false);
                 if (error) {
-                    alert('?�???�패: (Supabase ?�이블이 ?�을 ???�습?�다) ' + error.message);
+                    alert('저장 실패: (Supabase 테이블이 없을 수 있습니다) ' + error.message);
                 } else {
-                    alert('?�공?�으�??�?�되?�습?�다.');
+                    alert('성공적으로 저장되었습니다.');
                     inspForm.reset();
                     formContainer.classList.add('hidden');
                     btnShowForm.classList.remove('hidden');
@@ -168,10 +168,10 @@ window.Modules['inspections'] = {
                             <i class="fa-solid fa-clipboard-check"></i>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-slate-800 mb-1">[Mock] ?�마�??�장 ?�별 ?�전?��? 결과</h4>
-                            <p class="text-xs text-slate-500 line-clamp-2">지�?침하 ?�험 구역 �??�수�??�상 ?�동 ?��? ?��? ?�료 (?�이?�항 ?�음)</p>
+                            <h4 class="font-bold text-slate-800 mb-1">[Mock] 장마철 현장 특별 안전점검 결과</h4>
+                            <p class="text-xs text-slate-500 line-clamp-2">지반 침하 위험 구역 및 양수기 정상 작동 여부 점검 완료 (특이사항 없음)</p>
                             <a href="#" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
-                                <i class="fa-solid fa-paperclip"></i> ?�장?�진.jpg
+                                <i class="fa-solid fa-paperclip"></i> 현장사진.jpg
                             </a>
                             <span class="text-[10px] text-slate-400 mt-2 block">2026-06-03</span>
                         </div>
@@ -192,7 +192,7 @@ window.Modules['inspections'] = {
                     <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 text-3xl mb-3">
                         <i class="fa-solid fa-list-check"></i>
                     </div>
-                    <p class="text-slate-500 text-sm font-medium">?�록???��?결과가 ?�습?�다.</p>
+                    <p class="text-slate-500 text-sm font-medium">등록된 점검결과가 없습니다.</p>
                 </div>
             `;
             return;
@@ -223,7 +223,7 @@ window.Modules['inspections'] = {
                         <p class="text-xs text-slate-500 whitespace-pre-wrap">${item.content || ''}</p>
                         ${item.file_url ? `
                         <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="mt-2 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1 px-2 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation();">
-                            <i class="fa-solid fa-paperclip"></i> 첨�??�료 ?�인
+                            <i class="fa-solid fa-paperclip"></i> 첨부자료 확인
                         </a>
                         ` : ''}
                         <span class="text-[10px] text-slate-400 mt-2 block">${new Date(item.created_at).toLocaleDateString()}</span>
@@ -232,7 +232,7 @@ window.Modules['inspections'] = {
             `;
         }).join('');
 
-        // ?�벤???�임
+        // 이벤트 위임
         if (isAdmin) {
             listEl.querySelectorAll('.btn-edit-insp').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -244,8 +244,8 @@ window.Modules['inspections'] = {
                     document.getElementById('i-title').value = btn.dataset.title;
                     document.getElementById('i-content').value = btn.dataset.content;
                     
-                    document.getElementById('insp-form-title').textContent = '?�전?��? 결과 ?�정';
-                    document.getElementById('i-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> ?�정 ?�료';
+                    document.getElementById('insp-form-title').textContent = '안전점검 결과 수정';
+                    document.getElementById('i-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> 수정 완료';
                     
                     formContainer.classList.remove('hidden');
                     if(btnShowForm) btnShowForm.classList.add('hidden');
@@ -255,15 +255,15 @@ window.Modules['inspections'] = {
             listEl.querySelectorAll('.btn-del-insp').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     e.stopPropagation();
-                    if (confirm('???��?결과�??�말 ??��?�시겠습?�까?')) {
+                    if (confirm('이 점검결과를 정말 삭제하시겠습니까?')) {
                         if (!AppState.supabase) {
-                            alert('[Mock] ??��?�었?�니??');
+                            alert('[Mock] 삭제되었습니다.');
                             return;
                         }
                         showLoading(true);
                         const { error } = await AppState.supabase.from('inspections').delete().eq('id', btn.dataset.id);
                         showLoading(false);
-                        if (error) alert('??�� ?�패: ' + error.message);
+                        if (error) alert('삭제 실패: ' + error.message);
                         else this.loadData();
                     }
                 });
@@ -271,4 +271,3 @@ window.Modules['inspections'] = {
         }
     }
 };
-

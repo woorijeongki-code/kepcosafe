@@ -1,18 +1,18 @@
 window.Modules['cases'] = {
-    title: '사고/우수사례 아카이브',
+    title: '?�고/?�수?��? ?�카?�브',
     
     render() {
         return `
             <div class="space-y-6 fade-in h-full flex flex-col relative">
                 <div class="flex border-b border-slate-200 mb-2">
-                    <button class="flex-1 py-3 text-sm font-bold text-red-500 border-b-2 border-red-500" id="tab-accident">사고사례 (타산지석)</button>
-                    <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors" id="tab-best">우수사례 (벤치마킹)</button>
+                    <button class="flex-1 py-3 text-sm font-bold text-red-500 border-b-2 border-red-500" id="tab-accident">?�고?��? (?�?��???</button>
+                    <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors" id="tab-best">?�수?��? (벤치마킹)</button>
                 </div>
                 
                 ${AppState.profile && AppState.profile.role === 'admin' ? `
                 <div class="px-2 mb-2 flex justify-end">
                     <button id="btn-show-case-form" class="bg-primary hover:bg-blue-800 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all flex items-center gap-1">
-                        <i class="fa-solid fa-pen"></i> 등록하기
+                        <i class="fa-solid fa-pen"></i> ?�록?�기
                     </button>
                 </div>
                 
@@ -20,23 +20,23 @@ window.Modules['cases'] = {
                     <button id="btn-close-case-form" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                         <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
-                    <h4 class="font-bold text-slate-800 mb-4" id="case-form-title">새 사례 등록</h4>
+                    <h4 class="font-bold text-slate-800 mb-4" id="case-form-title">???��? ?�록</h4>
                     <form id="case-form" class="space-y-3">
                         <input type="hidden" id="c-id" value="">
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">제목</label>
-                            <input type="text" id="c-title" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="사례 제목">
+                            <label class="block text-xs font-medium text-slate-700 mb-1">?�목</label>
+                            <input type="text" id="c-title" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="?��? ?�목">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">상세 내용</label>
-                            <textarea id="c-content" rows="3" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="상세 내용을 입력하세요"></textarea>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">?�세 ?�용</label>
+                            <textarea id="c-content" rows="3" required class="block w-full p-2.5 border border-slate-300 rounded-xl focus:ring-primary focus:border-primary text-sm" placeholder="?�세 ?�용???�력?�세??></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">붙임 (첨부파일/이미지)</label>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">붙임 (첨�??�일/?��?지)</label>
                             <input type="file" id="c-file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer border border-slate-200 rounded-xl p-1">
                         </div>
                         <button type="submit" class="w-full bg-slate-800 hover:bg-black text-white font-bold py-3 rounded-xl shadow-md transition-colors mt-2 text-sm" id="c-submit-btn">
-                            <i class="fa-solid fa-check mr-1"></i> 등록 완료
+                            <i class="fa-solid fa-check mr-1"></i> ?�록 ?�료
                         </button>
                     </form>
                 </div>
@@ -46,12 +46,12 @@ window.Modules['cases'] = {
                     <div class="animate-pulse space-y-3 p-2"><div class="h-32 bg-slate-200 rounded-2xl w-full"></div><div class="h-32 bg-slate-200 rounded-2xl w-full"></div></div>
                 </div>
 
-                <!-- 상세 보기 모달 -->
+                <!-- ?�세 보기 모달 -->
                 <div id="case-detail-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
                     <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden transform scale-95 transition-transform flex flex-col max-h-[90vh]" id="case-detail-modal-content">
                         <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2" id="c-detail-badge-container">
-                                <span id="c-detail-category-badge" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">우수</span>
+                                <span id="c-detail-category-badge" class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">?�수</span>
                             </h3>
                             <button id="btn-close-case-detail" class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200">
                                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -59,16 +59,16 @@ window.Modules['cases'] = {
                         </div>
                         <div class="p-6 overflow-y-auto flex-1">
                             <div id="c-detail-image-container" class="mb-4 rounded-xl overflow-hidden bg-slate-100 hidden">
-                                <img id="c-detail-image" src="" alt="사례 이미지" class="w-full h-auto object-contain max-h-64">
+                                <img id="c-detail-image" src="" alt="?��? ?��?지" class="w-full h-auto object-contain max-h-64">
                             </div>
-                            <h2 class="text-xl font-bold text-slate-800 mb-2" id="c-detail-title">제목</h2>
+                            <h2 class="text-xl font-bold text-slate-800 mb-2" id="c-detail-title">?�목</h2>
                             <p class="text-xs text-slate-400 mb-6" id="c-detail-date">2026-06-04</p>
-                            <div class="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed mb-6" id="c-detail-body">내용</div>
+                            <div class="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed mb-6" id="c-detail-body">?�용</div>
                             
                             <div id="c-detail-attachment" class="hidden border-t border-slate-100 pt-4">
-                                <h4 class="text-xs font-bold text-slate-500 mb-2">첨부자료</h4>
+                                <h4 class="text-xs font-bold text-slate-500 mb-2">첨�??�료</h4>
                                 <a href="#" target="_blank" id="c-detail-link-btn" class="inline-flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-xl text-sm font-bold transition-colors border border-slate-200">
-                                    <i class="fa-solid fa-paperclip"></i> <span>원본 파일 보기</span>
+                                    <i class="fa-solid fa-paperclip"></i> <span>?�본 ?�일 보기</span>
                                 </a>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ window.Modules['cases'] = {
                 tabBest.className = "flex-1 py-3 text-sm font-bold text-emerald-500 border-b-2 border-emerald-500 transition-all";
                 tabAccident.className = "flex-1 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-all";
                 const formTitle = document.getElementById('case-form-title');
-                if(formTitle) formTitle.textContent = '새 우수사례 등록';
+                if(formTitle) formTitle.textContent = '???�수?��? ?�록';
                 this.loadCases();
             });
         }
@@ -112,8 +112,8 @@ window.Modules['cases'] = {
         if (btnShowForm && formContainer) {
             btnShowForm.addEventListener('click', () => {
                 document.getElementById('c-id').value = '';
-                document.getElementById('c-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> 등록 완료';
-                document.getElementById('case-form-title').textContent = this.currentTab === 'accident' ? '새 사고사례 등록' : '새 우수사례 등록';
+                document.getElementById('c-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> ?�록 ?�료';
+                document.getElementById('case-form-title').textContent = this.currentTab === 'accident' ? '???�고?��? ?�록' : '???�수?��? ?�록';
                 caseForm.reset();
                 formContainer.classList.remove('hidden');
                 btnShowForm.classList.add('hidden');
@@ -124,7 +124,7 @@ window.Modules['cases'] = {
                 btnShowForm.classList.remove('hidden');
             });
             
-            // 상세 모달 닫기
+            // ?�세 모달 ?�기
             const detailModal = document.getElementById('case-detail-modal');
             const detailModalContent = document.getElementById('case-detail-modal-content');
             const btnCloseDetail = document.getElementById('btn-close-case-detail');
@@ -153,7 +153,7 @@ window.Modules['cases'] = {
                 const hasFile = fileInput && fileInput.files.length > 0;
                 
                 if (!AppState.supabase) {
-                    alert('[Mock] ' + (id ? '수정' : '등록') + '되었습니다.' + (hasFile ? '\\n(첨부파일: ' + fileInput.files[0].name + ')' : ''));
+                    alert('[Mock] ' + (id ? '?�정' : '?�록') + '?�었?�니??' + (hasFile ? '\\n(첨�??�일: ' + fileInput.files[0].name + ')' : ''));
                     caseForm.reset();
                     formContainer.classList.add('hidden');
                     btnShowForm.classList.remove('hidden');
@@ -162,7 +162,7 @@ window.Modules['cases'] = {
                 }
                 
                 showLoading(true);
-                // 실제 파일 업로드 로직
+                // ?�제 ?�일 ?�로??로직
                 let fileUrl = null;
                 if (hasFile) {
                     const file = fileInput.files[0];
@@ -171,10 +171,10 @@ window.Modules['cases'] = {
                     
                     const { data: uploadData, error: uploadError } = await AppState.supabase.storage
                         .from('attachments')
-                        .upload(fileName, file);
+                        .upload(fileName, new Blob([await file.arrayBuffer()], {type: file.type || 'application/pdf'}), { contentType: file.type || 'application/pdf' });
                         
                     if (uploadError) {
-                        alert('파일 업로드 실패: ' + uploadError.message);
+                        alert('?�일 ?�로???�패: ' + uploadError.message);
                         showLoading(false);
                         return;
                     }
@@ -208,9 +208,9 @@ window.Modules['cases'] = {
                 
                 showLoading(false);
                 if (error) {
-                    alert('처리 실패: ' + error.message);
+                    alert('처리 ?�패: ' + error.message);
                 } else {
-                    alert(id ? '수정되었습니다.' : '등록되었습니다.');
+                    alert(id ? '?�정?�었?�니??' : '?�록?�었?�니??');
                     caseForm.reset();
                     formContainer.classList.add('hidden');
                     btnShowForm.classList.remove('hidden');
@@ -229,15 +229,15 @@ window.Modules['cases'] = {
                 if (this.currentTab === 'accident') {
                     listEl.innerHTML = `
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow relative" onclick="alert('사례 상세 보기')">
+                            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow relative" onclick="alert('?��? ?�세 보기')">
                                 <div class="p-5">
                                     <div class="flex items-start gap-2 mb-2">
-                                        <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">사고</span>
-                                        <h4 class="font-bold text-sm text-slate-800 leading-tight">[Mock] A지사 전주 교체 중 추락 발생</h4>
+                                        <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">?�고</span>
+                                        <h4 class="font-bold text-sm text-slate-800 leading-tight">[Mock] A지???�주 교체 �?추락 발생</h4>
                                     </div>
-                                    <p class="text-xs text-slate-500 line-clamp-2">안전대 미체결 상태에서 작업 위치 이동 중 발판 미끄러짐으로 인한 추락 사고 발생...</p>
-                                    <button class="mt-3 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 px-3 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨부파일 다운로드 (Mock)')">
-                                        <i class="fa-solid fa-paperclip"></i> 첨부자료 있음
+                                    <p class="text-xs text-slate-500 line-clamp-2">?�전?� 미체�??�태?�서 ?�업 ?�치 ?�동 �?발판 미끄?�짐?�로 ?�한 추락 ?�고 발생...</p>
+                                    <button class="mt-3 text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 px-3 rounded-lg flex items-center gap-1 w-fit transition-colors border border-slate-200" onclick="event.stopPropagation(); alert('첨�??�일 ?�운로드 (Mock)')">
+                                        <i class="fa-solid fa-paperclip"></i> 첨�??�료 ?�음
                                     </button>
                                     <span class="text-[10px] text-slate-400 mt-3 block">2026-05-15</span>
                                 </div>
@@ -250,10 +250,10 @@ window.Modules['cases'] = {
                             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow relative">
                                 <div class="p-5">
                                     <div class="flex items-start gap-2 mb-2">
-                                        <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">우수</span>
-                                        <h4 class="font-bold text-sm text-slate-800 leading-tight">[Mock] 자체 고안 스마트 안전고리 도입</h4>
+                                        <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 shrink-0">?�수</span>
+                                        <h4 class="font-bold text-sm text-slate-800 leading-tight">[Mock] ?�체 고안 ?�마???�전고리 ?�입</h4>
                                     </div>
-                                    <p class="text-xs text-slate-500 line-clamp-2">체결 여부를 LED와 소리로 알려주는 스마트 안전고리를 도입하여 근로자 만족도 및 안전성 향상...</p>
+                                    <p class="text-xs text-slate-500 line-clamp-2">체결 ?��?�?LED?� ?�리�??�려주는 ?�마???�전고리�??�입?�여 근로??만족??�??�전???�상...</p>
                                     <span class="text-[10px] text-slate-400 mt-3 block">2026-05-15</span>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@ window.Modules['cases'] = {
                     <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 text-3xl mb-3">
                         <i class="fa-regular fa-folder-open"></i>
                     </div>
-                    <p class="text-slate-500 text-sm">등록된 사례가 없습니다.</p>
+                    <p class="text-slate-500 text-sm">?�록???��?가 ?�습?�다.</p>
                 </div>
             `;
             return;
@@ -286,7 +286,7 @@ window.Modules['cases'] = {
 
         listEl.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">` + data.map(item => {
             const badgeColor = this.currentTab === 'accident' ? 'bg-red-600' : 'bg-emerald-600';
-            const badgeLabel = this.currentTab === 'accident' ? '사고' : '우수';
+            const badgeLabel = this.currentTab === 'accident' ? '?�고' : '?�수';
             const imageStyle = item.image_url 
                 ? `background-image: url('${item.image_url}'); background-size: cover; background-position: center;` 
                 : '';
@@ -316,7 +316,7 @@ window.Modules['cases'] = {
                         <p class="text-xs text-slate-500 line-clamp-2">${item.content}</p>
                         ${(item.file_url || item.image_url) ? `
                         <div class="mt-3 text-[10px] bg-slate-100 text-slate-600 py-1.5 px-3 rounded-lg flex items-center gap-1 w-fit border border-slate-200">
-                            <i class="fa-solid fa-paperclip"></i> 첨부자료 있음
+                            <i class="fa-solid fa-paperclip"></i> 첨�??�료 ?�음
                         </div>
                         ` : ''}
                         <span class="text-[10px] text-slate-400 mt-3 block">${new Date(item.created_at).toLocaleDateString()}</span>
@@ -325,8 +325,7 @@ window.Modules['cases'] = {
             `;
         }).join('') + `</div>`;
 
-        // 상세 보기 이벤트
-        listEl.querySelectorAll('.btn-view-case').forEach(btn => {
+        // ?�세 보기 ?�벤??        listEl.querySelectorAll('.btn-view-case').forEach(btn => {
             btn.addEventListener('click', () => {
                 const type = btn.getAttribute('data-type');
                 const title = btn.getAttribute('data-title');
@@ -337,9 +336,9 @@ window.Modules['cases'] = {
                 
                 const badgeContainer = document.getElementById('c-detail-badge-container');
                 if (type === 'accident') {
-                    badgeContainer.innerHTML = '<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">사고</span> <span class="text-sm">사고사례</span>';
+                    badgeContainer.innerHTML = '<span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">?�고</span> <span class="text-sm">?�고?��?</span>';
                 } else {
-                    badgeContainer.innerHTML = '<span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">우수</span> <span class="text-sm">우수사례</span>';
+                    badgeContainer.innerHTML = '<span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded">?�수</span> <span class="text-sm">?�수?��?</span>';
                 }
                 
                 document.getElementById('c-detail-title').textContent = title;
@@ -377,7 +376,7 @@ window.Modules['cases'] = {
             });
         });
 
-        // 이벤트 위임
+        // ?�벤???�임
         if (isAdmin || AppState.user) {
             listEl.querySelectorAll('.btn-edit-case').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -390,8 +389,8 @@ window.Modules['cases'] = {
                     document.getElementById('c-content').value = btn.dataset.content;
                     document.getElementById('c-image').value = btn.dataset.image;
                     
-                    document.getElementById('case-form-title').textContent = '사례 수정';
-                    document.getElementById('c-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> 수정 완료';
+                    document.getElementById('case-form-title').textContent = '?��? ?�정';
+                    document.getElementById('c-submit-btn').innerHTML = '<i class="fa-solid fa-check mr-1"></i> ?�정 ?�료';
                     
                     formContainer.classList.remove('hidden');
                     if(btnShowForm) btnShowForm.classList.add('hidden');
@@ -402,15 +401,15 @@ window.Modules['cases'] = {
             listEl.querySelectorAll('.btn-del-case').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     e.stopPropagation();
-                    if (confirm('정말 이 사례를 삭제하시겠습니까?')) {
+                    if (confirm('?�말 ???��?�???��?�시겠습?�까?')) {
                         if (!AppState.supabase) {
-                            alert('[Mock] 삭제되었습니다.');
+                            alert('[Mock] ??��?�었?�니??');
                             return;
                         }
                         showLoading(true);
                         const { error } = await AppState.supabase.from('cases').delete().eq('id', btn.dataset.id);
                         showLoading(false);
-                        if (error) alert('삭제 실패: ' + error.message);
+                        if (error) alert('??�� ?�패: ' + error.message);
                         else this.loadCases();
                     }
                 });
@@ -418,3 +417,4 @@ window.Modules['cases'] = {
         }
     }
 };
+
